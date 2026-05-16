@@ -663,6 +663,11 @@ function renderQuiz(container) {
   const q = currentQuestion();
   if (!q) { state.phase = 'group_complete'; render(); return; }
 
+  // Ensure options are shuffled for this question
+  if (!state.shuffledOptions || state.shuffledOptions.length === 0) {
+    state.shuffledOptions = shuffle(q.options);
+  }
+
   // Build progress
   const total = state.currentGroupQuestions.length;
   const done = state.groupSolved.size;
