@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>灵灵狗·宠物美容师四级理论考试</title>
+  <style>
+    :root {
+      --primary: #6C5CE7;
+      --primary-dark: #5B4CCC;
+      --success: #00B894;
+      --success-light: #E8F8F5;
+      --error: #E17055;
+      --error-light: #FDEDEA;
+      --warn: #FDCB6E;
+      --warn-light: #FEF9E7;
+      --bg: #F5F6FA;
+      --card: #FFFFFF;
+      --text: #2D3436;
+      --text-muted: #636E72;
+      --border: #DFE6E9;
+      --radius: 14px;
+      --shadow: 0 4px 20px rgba(108, 92, 231, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(108,92,231,0.25);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-brand .logo {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .header-brand h1 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .header-brand span {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .timer-display {
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Main ── */
+    main {
+      flex: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 24px 16px 60px;
+    }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .progress-bar-track {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), #a29bfe);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-stats {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    .progress-stats .correct { color: var(--success); font-weight: 600; }
+    .progress-stats .wrong { color: var(--error); font-weight: 600; }
+
+    /* ── Question Card ── */
+    .question-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .q-type-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+
+    .q-type-badge.single { background: #E8F0FE; color: #4A6CF7; }
+    .q-type-badge.multi { background: #FFF3E0; color: #E67E22; }
+    .q-type-badge.tf { background: #E8F8F5; color: #00B894; }
+
+    .q-number {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-text {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 22px;
+      font-weight: 500;
+    }
+
+    /* ── Options ── */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      font-size: 15px;
+      line-height: 1.5;
+      text-align: left;
+      transition: all 0.18s ease;
+      color: var(--text);
+      width: 100%;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #F0EDFF;
+    }
+
+    .option-btn.selected {
+      border-color: var(--primary);
+      background: #EDE9FF;
+    }
+
+    .option-btn.correct {
+      border-color: var(--success);
+      background: var(--success-light);
+      color: #007A5E;
+    }
+
+    .option-btn.wrong {
+      border-color: var(--error);
+      background: var(--error-light);
+      color: #C0392B;
+    }
+
+    .option-btn.show-correct {
+      border-color: var(--success);
+      background: var(--success-light);
+    }
+
+    .option-btn:disabled { cursor: default; }
+
+    .option-key {
+      min-width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+
+    .option-btn.selected .option-key {
+      background: var(--primary);
+      color: white;
+    }
+
+    .option-btn.correct .option-key {
+      background: var(--success);
+      color: white;
+    }
+
+    .option-btn.wrong .option-key {
+      background: var(--error);
+      color: white;
+    }
+
+    /* ── TF Buttons ── */
+    .tf-buttons {
+      display: flex;
+      gap: 16px;
+    }
+
+    .tf-btn {
+      flex: 1;
+      padding: 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: 700;
+      transition: all 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tf-btn span { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+
+    .tf-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #F0EDFF;
+    }
+
+    .tf-btn.true-btn:hover:not(:disabled) {
+      border-color: var(--success);
+      background: var(--success-light);
+    }
+
+    .tf-btn.false-btn:hover:not(:disabled) {
+      border-color: var(--error);
+      background: var(--error-light);
+    }
+
+    .tf-btn:disabled { cursor: default; }
+    .tf-btn.correct-true { border-color: var(--success); background: var(--success-light); }
+    .tf-btn.wrong-false { border-color: var(--error); background: var(--error-light); }
+    .tf-btn.show-true { border-color: var(--success); background: var(--success-light); }
+
+    /* ── Multi-choice note ── */
+    .multi-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      padding: 8px 12px;
+      background: #FFF9E6;
+      border-radius: 8px;
+      border-left: 3px solid var(--warn);
+    }
+
+    /* ── Submit Button ── */
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: background 0.18s ease;
+    }
+
+    .submit-btn:hover { background: var(--primary-dark); }
+    .submit-btn:disabled { background: #B2BEC3; cursor: default; }
+
+    /* ── Feedback ── */
+    .feedback {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .feedback.correct {
+      background: var(--success-light);
+      color: #007A5E;
+      border: 1.5px solid var(--success);
+    }
+
+    .feedback.wrong {
+      background: var(--error-light);
+      color: #C0392B;
+      border: 1.5px solid var(--error);
+    }
+
+    .feedback-title {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    /* ── Next group button ── */
+    .next-group-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--success);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.18s ease;
+    }
+
+    .next-group-btn:hover { background: #00A381; }
+
+    /* ── Welcome screen ── */
+    .welcome-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .welcome-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .welcome-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .welcome-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .welcome-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .welcome-stat {
+      background: white;
+      border-radius: 12px;
+      padding: 16px 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .welcome-stat .num {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .welcome-stat .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .start-btn {
+      width: 100%;
+      max-width: 360px;
+      padding: 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s ease;
+    }
+
+    .start-btn:hover { background: var(--primary-dark); }
+
+    /* ── Completion screen ── */
+    .completion-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .completion-icon { font-size: 64px; margin-bottom: 16px; }
+
+    .completion-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--success);
+      margin-bottom: 8px;
+    }
+
+    .completion-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .restart-btn {
+      padding: 14px 32px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ── Group complete banner ── */
+    .group-banner {
+      background: linear-gradient(135deg, var(--success), #00CEC9);
+      color: white;
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      text-align: center;
+      margin-bottom: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .group-banner .icon { font-size: 40px; margin-bottom: 10px; }
+    .group-banner .title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .group-banner .sub { font-size: 13px; opacity: 0.9; }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .q-text { font-size: 15px; }
+      .welcome-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .welcome-stat .num { font-size: 20px; }
+      .question-card { padding: 20px 16px; }
+      header { padding: 12px 16px; }
+      .header-brand h1 { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-brand">
+    <div class="logo">🐾</div>
+    <div>
+      <h1>灵灵狗·理论考试练习</h1>
+      <span>宠物美容师四级（中级工）</span>
+    </div>
+  </div>
+  <div class="timer-display" id="timer">⏱ 00:00</div>
+</header>
+
+<main id="app"></main>
+
+<script>
+const GROUP_SIZE = 20;
+
+// ── Data (loaded from questions.json) ──
+let allQuestions = [];
+let timerSeconds = 0;
+let timerInterval = null;
+
+// ── State ──
+let state = {
+  phase: 'welcome',    // welcome | quiz | group_complete | all_done
+  currentGroupIndex: 0,
+  currentGroupQuestions: [],
+  currentQuestionIndex: 0,
+  correctInGroup: 0,
+  attemptsInQuestion: 0,
+  // per-group: which questions have been answered correctly
+  groupSolved: [],     // Set of question indices solved in this group
+  // shuffled options for current display
+  shuffledOptions: [],
+  // selected options
+  selectedKeys: [],
+  // submitted
+  submitted: false,
+  // last wrong
+  lastWrong: false,
+};
+
+function $(sel) { return document.querySelector(sel); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+// ── Timer ──
+function startTimer() {
+  stopTimer();
+  timerSeconds = 0;
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+}
+
+function updateTimerDisplay() {
+  const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+  const s = String(timerSeconds % 60).padStart(2, '0');
+  const el = $('#timer');
+  if (el) el.textContent = `⏱ ${m}:${s}`;
+}
+
+// ── Shuffle ──
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ── Render ──
+function render() {
+  const app = $('#app');
+  if (state.phase === 'welcome') {
+    renderWelcome(app);
+  } else if (state.phase === 'quiz') {
+    renderQuiz(app);
+  } else if (state.phase === 'group_complete') {
+    renderGroupComplete(app);
+  } else if (state.phase === 'all_done') {
+    renderAllDone(app);
+  }
+}
+
+function renderWelcome(container) {
+  const totalGroups = Math.ceil(allQuestions.length / GROUP_SIZE);
+  const single = allQuestions.filter(q => q.type === 'single').length;
+  const multi  = allQuestions.filter(q => q.type === 'multi').length;
+  const tf    = allQuestions.filter(q => q.type === 'tf').length;
+
+  container.innerHTML = `
+    <div class="welcome-screen">
+      <div class="welcome-icon">🐾</div>
+      <div class="welcome-title">欢迎来到灵灵狗理论练习</div>
+      <div class="welcome-sub">宠物美容师四级（中级工）· 选择判断题练习</div>
+      <div class="welcome-stats">
+        <div class="welcome-stat">
+          <div class="num">${single}</div>
+          <div class="label">单选题</div>
+        </div>
+        <div class="welcome-stat">
+          <div class="num">${multi}</div>
+          <div class="label">多选题</div>
+        </div>
+        <div class="welcome-stat">
+          <div class="num">${tf}</div>
+          <div class="label">判断题</div>
+        </div>
+      </div>
+      <div class="welcome-stat" style="margin-bottom:28px; grid-column:1/-1; background:white; border-radius:12px; padding:14px; box-shadow:var(--shadow);">
+        <div style="font-size:13px; color:var(--text-muted); line-height:1.7;">
+          📌 每<span style="color:var(--primary); font-weight:700;">20题</span>为一组，本组全部答对方可进入下一组<br>
+          📌 答错后显示正确答案并可重新作答（选项随机打乱）<br>
+          📌 判断题请点击 <span style="color:var(--success);font-weight:700;">✓ 正确</span> 或 <span style="color:var(--error);font-weight:700;">✗ 错误</span>
+        </div>
+      </div>
+      <button class="start-btn" onclick="startQuiz()">开始练习</button>
+    </div>
+  `;
+}
+
+function startQuiz() {
+  state.phase = 'quiz';
+  state.currentGroupIndex = 0;
+  state.correctInGroup = 0;
+  state.groupSolved = new Set();
+  loadGroup(0);
+  startTimer();
+  render();
+}
+
+function loadGroup(groupIndex) {
+  const start = groupIndex * GROUP_SIZE;
+  const end = start + GROUP_SIZE;
+  state.currentGroupQuestions = allQuestions.slice(start, end);
+  state.currentQuestionIndex = 0;
+  state.correctInGroup = 0;
+  state.groupSolved = new Set();
+  state.attemptsInQuestion = 0;
+  state.submitted = false;
+  state.selectedKeys = [];
+  state.lastWrong = false;
+}
+
+function currentQuestion() {
+  return state.currentGroupQuestions[state.currentQuestionIndex];
+}
+
+function renderQuiz(container) {
+  const q = currentQuestion();
+  if (!q) { state.phase = 'group_complete'; render(); return; }
+
+  // Build progress
+  const total = state.currentGroupQuestions.length;
+  const done = state.groupSolved.size;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  // Progress section
+  let progressHTML = `
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>第 ${state.currentGroupIndex + 1} 组 · 第 ${state.currentQuestionIndex + 1} / ${total} 题</span>
+        <span>${done} / ${total} 已完成</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" style="width:${pct}%"></div>
+      </div>
+    </div>
+  `;
+
+  // Group completion banner if all done
+  if (done === total) {
+    container.innerHTML = progressHTML + `
+      <div class="group-banner">
+        <div class="icon">🎉</div>
+        <div class="title">第 ${state.currentGroupIndex + 1} 组全部完成！</div>
+        <div class="sub">即将进入下一组...</div>
+      </div>
+    `;
+    setTimeout(() => {
+      state.currentGroupIndex++;
+      if (state.currentGroupIndex >= Math.ceil(allQuestions.length / GROUP_SIZE)) {
+        state.phase = 'all_done';
+      } else {
+        loadGroup(state.currentGroupIndex);
+        state.phase = 'quiz';
+      }
+      render();
+    }, 1500);
+    return;
+  }
+
+  // Options
+  let optionsHTML = '';
+  if (q.type === 'tf') {
+    optionsHTML = `
+      <div class="tf-buttons">
+        <button class="tf-btn true-btn" id="tf-true" onclick="submitTF('true')">
+          ✓
+          <span>正确</span>
+        </button>
+        <button class="tf-btn false-btn" id="tf-false" onclick="submitTF('false')">
+          ✗
+          <span>错误</span>
+        </button>
+      </div>
+    `;
+  } else {
+    if (q.type === 'multi') {
+      optionsHTML += `<div class="multi-note">⚠️ 多选题：需选择所有正确答案，选错不得分</div>`;
+    }
+    optionsHTML += `<div class="options-list" id="options-list"></div>`;
+
+    if (!state.submitted && state.selectedKeys.length > 0) {
+      if (q.type === 'single') {
+        optionsHTML += `<button class="submit-btn" onclick="submitSingleChoice()">提交答案</button>`;
+      } else {
+        optionsHTML += `<button class="submit-btn" onclick="submitMultiChoice()">提交答案</button>`;
+      }
+    }
+  }
+
+  // Type badge
+  const typeMap = { single: '单选题', multi: '多选题', tf: '判断题' };
+  const typeClass = { single: 'single', multi: 'multi', tf: 'tf' };
+
+  container.innerHTML = progressHTML + `
+    <div class="question-card">
+      <span class="q-type-badge ${typeClass[q.type]}">${typeMap[q.type]}</span>
+      <div class="q-number">第 ${q.number} 题</div>
+      <div class="q-text">${q.text}</div>
+      ${optionsHTML}
+      <div id="feedback-area"></div>
+    </div>
+  `;
+
+  // Render options
+  if (q.type !== 'tf') {
+    const list = $('#options-list');
+    if (list) {
+      list.innerHTML = state.shuffledOptions.map(opt => `
+        <button class="option-btn${state.selectedKeys.includes(opt.key) ? ' selected' : ''}"
+                onclick="toggleOption('${opt.key}')" ${state.submitted ? 'disabled' : ''}>
+          <span class="option-key">${opt.key}</span>
+          <span>${opt.text}</span>
+        </button>
+      `).join('');
+    }
+  }
+}
+
+function submitTF(answer) {
+  const q = currentQuestion();
+  const correct = q.answer === answer;
+
+  $('#tf-true').disabled = true;
+  $('#tf-false').disabled = true;
+
+  if (correct) {
+    if (answer === 'true') $('#tf-true').classList.add('correct-true');
+    else $('#tf-false').classList.add('correct-true');
+
+    showFeedback(true);
+    setTimeout(() => advanceQuestion(), 1200);
+  } else {
+    if (answer === 'true') $('#tf-true').classList.add('wrong-false');
+    else $('#tf-false').classList.add('wrong-false');
+    // Show correct
+    if (q.answer === 'true') $('#tf-true').classList.add('show-true');
+    else $('#tf-false').classList.add('show-true');
+
+    showFeedback(false, q.answer === 'true' ? '正确' : '错误');
+    setTimeout(() => {
+      // Reshuffle for retry
+      state.selectedKeys = [];
+      state.attemptsInQuestion++;
+      $('#tf-true').disabled = false;
+      $('#tf-false').disabled = false;
+      $('#tf-true').className = 'tf-btn true-btn';
+      $('#tf-false').className = 'tf-btn false-btn';
+      clearFeedback();
+    }, 1500);
+  }
+}
+
+function toggleOption(key) {
+  if (state.submitted) return;
+  const q = currentQuestion();
+  if (q.type === 'single') {
+    state.selectedKeys = [key];
+  } else {
+    if (state.selectedKeys.includes(key)) {
+      state.selectedKeys = state.selectedKeys.filter(k => k !== key);
+    } else {
+      state.selectedKeys = [...state.selectedKeys, key];
+    }
+  }
+  renderQuiz($('#app'));
+}
+
+function submitSingleChoice() {
+  const q = currentQuestion();
+  const selected = state.selectedKeys[0];
+  if (!selected) return;
+
+  state.submitted = true;
+
+  const correctAnswer = q.answer;
+  const isCorrect = selected === correctAnswer;
+
+  // Highlight options
+  $$('.option-btn').forEach(btn => {
+    btn.disabled = true;
+    const k = btn.querySelector('.option-key').textContent;
+    if (k === correctAnswer) btn.classList.add('correct');
+    else if (k === selected && !isCorrect) btn.classList.add('wrong');
+  });
+
+  if (isCorrect) {
+    showFeedback(true);
+    state.groupSolved.add(state.currentQuestionIndex);
+    setTimeout(() => advanceQuestion(), 1200);
+  } else {
+    const correctText = q.options.find(o => o.key === correctAnswer).text;
+    showFeedback(false, `正确答案：${correctAnswer}. ${correctText}`);
+    state.attemptsInQuestion++;
+    setTimeout(() => {
+      // Reshuffle options for retry
+      state.shuffledOptions = shuffle(q.options);
+      state.selectedKeys = [];
+      state.submitted = false;
+      renderQuiz($('#app'));
+    }, 1800);
+  }
+}
+
+function submitMultiChoice() {
+  const q = currentQuestion();
+  if (state.selectedKeys.length === 0) return;
+
+  state.submitted = true;
+
+  const correctSet = new Set(q.answer);
+  const selectedSet = new Set(state.selectedKeys);
+
+  const isCorrect =
+    selectedSet.size === correctSet.size &&
+    [...selectedSet].every(k => correctSet.has(k));
+
+  // Highlight options
+  $$('.option-btn').forEach(btn => {
+    btn.disabled = true;
+    const k = btn.querySelector('.option-key').textContent;
+    if (correctSet.has(k)) btn.classList.add('correct');
+    else if (selectedSet.has(k)) btn.classList.add('wrong');
+  });
+
+  if (isCorrect) {
+    showFeedback(true);
+    state.groupSolved.add(state.currentQuestionIndex);
+    setTimeout(() => advanceQuestion(), 1200);
+  } else {
+    const correctText = q.answer.map(k => {
+      const opt = q.options.find(o => o.key === k);
+      return `${k}. ${opt ? opt.text : k}`;
+    }).join('；');
+    showFeedback(false, `正确答案：${correctText}`);
+    state.attemptsInQuestion++;
+    setTimeout(() => {
+      state.shuffledOptions = shuffle(q.options);
+      state.selectedKeys = [];
+      state.submitted = false;
+      renderQuiz($('#app'));
+    }, 2000);
+  }
+}
+
+function showFeedback(isCorrect, extra) {
+  const area = $('#feedback-area');
+  if (!area) return;
+  if (isCorrect) {
+    area.innerHTML = `
+      <div class="feedback correct">
+        <div class="feedback-title">✓ 回答正确！</div>
+      </div>
+    `;
+  } else {
+    area.innerHTML = `
+      <div class="feedback wrong">
+        <div class="feedback-title">✗ 回答错误！</div>
+        ${extra ? `<div style="margin-top:6px; font-size:13px;">${extra}</div>` : ''}
+        <div style="margin-top:6px; font-size:13px; opacity:0.8;">请重新作答本题（选项已打乱）</div>
+      </div>
+    `;
+  }
+}
+
+function clearFeedback() {
+  const area = $('#feedback-area');
+  if (area) area.innerHTML = '';
+}
+
+function advanceQuestion() {
+  clearFeedback();
+  state.currentQuestionIndex++;
+  state.attemptsInQuestion = 0;
+  state.submitted = false;
+  state.selectedKeys = [];
+
+  // If end of group
+  if (state.currentQuestionIndex >= state.currentGroupQuestions.length) {
+    // Check if all solved
+    if (state.groupSolved.size === state.currentGroupQuestions.length) {
+      state.phase = 'group_complete';
+    } else {
+      // Find first unsolved
+      for (let i = 0; i < state.currentGroupQuestions.length; i++) {
+        if (!state.groupSolved.has(i)) {
+          state.currentQuestionIndex = i;
+          break;
+        }
+      }
+    }
+  }
+
+  const q = currentQuestion();
+  if (q) {
+    state.shuffledOptions = shuffle(q.options);
+  }
+
+  render();
+}
+
+function renderGroupComplete(container) {
+  const isLastGroup = state.currentGroupIndex >= Math.ceil(allQuestions.length / GROUP_SIZE) - 1;
+  container.innerHTML = `
+    <div class="group-banner" style="background:linear-gradient(135deg,#00B894,#00CEC9);">
+      <div class="icon">🎉</div>
+      <div class="title">第 ${state.currentGroupIndex + 1} 组全部完成！</div>
+      <div class="sub">所有20题均已答对，继续加油！</div>
+    </div>
+    ${isLastGroup ? `
+      <div class="question-card" style="text-align:center;">
+        <div style="font-size:48px;margin-bottom:16px;">🏆</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px;">恭喜你完成全部练习！</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:24px;">
+          共 ${allQuestions.length} 题 · ${Math.ceil(allQuestions.length / GROUP_SIZE)} 组
+        </div>
+        <button class="start-btn" onclick="restart()">重新开始</button>
+      </div>
+    ` : `
+      <button class="next-group-btn" onclick="goNextGroup()">
+        进入第 ${state.currentGroupIndex + 2} 组 →
+      </button>
+    `}
+  `;
+}
+
+function goNextGroup() {
+  state.currentGroupIndex++;
+  loadGroup(state.currentGroupIndex);
+  state.phase = 'quiz';
+  render();
+}
+
+function renderAllDone(container) {
+  stopTimer();
+  const totalGroups = Math.ceil(allQuestions.length / GROUP_SIZE);
+  container.innerHTML = `
+    <div class="completion-screen">
+      <div class="completion-icon">🏆</div>
+      <div class="completion-title">恭喜完成全部练习！</div>
+      <div class="completion-sub">
+        共 ${allQuestions.length} 题 · ${totalGroups} 组<br>
+        用时 ${String(Math.floor(timerSeconds/60)).padStart(2,'0')}:${String(timerSeconds%60).padStart(2,'0')}
+      </div>
+      <button class="restart-btn" onclick="restart()">重新开始练习</button>
+    </div>
+  `;
+}
+
+function restart() {
+  stopTimer();
+  state.phase = 'welcome';
+  render();
+}
+
+// ── Init (inline data - no external file needed) ──
+(function() {
+  try {
+    var raw = {"questions": [{"type": "single", "number": "1", "text": "宠物美容的核心目的不包括（）**", "options": [{"key": "A", "text": "清洁宠物毛发、去除污垢异味"}, {"key": "B", "text": "维护宠物皮肤健康，预防皮肤病"}, {"key": "C", "text": "单纯追求美观，忽视宠物舒适"}, {"key": "D", "text": "梳理毛发、防止打结，提升宠物整体状态"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "2", "text": "宠物美容师从业的首要职业素养是（）**", "options": [{"key": "A", "text": "熟练掌握造型技巧"}, {"key": "B", "text": "爱护宠物，具备耐心和责任心，保障宠物安全"}, {"key": "C", "text": "精通各类工具使用"}, {"key": "D", "text": "快速完成美容流程"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "3", "text": "下列不属于宠物基础美容服务范畴的是（）**", "options": [{"key": "A", "text": "毛发洗护、吹干梳理"}, {"key": "B", "text": "指甲修剪、耳道清洁"}, {"key": "C", "text": "宠物疾病诊断与治疗"}, {"key": "D", "text": "肛门腺清理、脚底毛修剪"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "4", "text": "宠物美容服务的适用对象主要是（）**", "options": [{"key": "A", "text": "仅流浪犬猫"}, {"key": "B", "text": "家养宠物犬、宠物猫"}, {"key": "C", "text": "大型猛兽"}, {"key": "D", "text": "实验动物"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "5", "text": "幼犬应于（）周龄时开头社会化训练**", "options": [{"key": "A", "text": "2"}, {"key": "B", "text": "4"}, {"key": "C", "text": "8"}, {"key": "D", "text": "12"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "6", "text": "按照毛发特性分类，泰迪犬、比熊犬属于（）**", "options": [{"key": "A", "text": "短毛犬"}, {"key": "B", "text": "丝毛犬"}, {"key": "C", "text": "卷毛犬（长毛卷毛）"}, {"key": "D", "text": "硬毛犬"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "7", "text": "金毛犬、拉布拉多犬的毛发类型是（）**", "options": [{"key": "A", "text": "双层短毛"}, {"key": "B", "text": "单层卷毛"}, {"key": "C", "text": "硬直长毛"}, {"key": "D", "text": "单层丝毛"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "8", "text": "雪纳瑞犬的毛发类型属于（）**", "options": [{"key": "A", "text": "软卷毛"}, {"key": "B", "text": "硬毛（刚毛）"}, {"key": "C", "text": "短直毛"}, {"key": "D", "text": "长毛丝毛"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "9", "text": "猫咪毛发中，容易打结、需重点梳理的是（）**", "options": [{"key": "A", "text": "表层护毛"}, {"key": "B", "text": "底层绒毛"}, {"key": "C", "text": "胡须"}, {"key": "D", "text": "尾毛"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "10", "text": "成年猫上前臼齿有几颗？**", "options": [{"key": "A", "text": "1颗"}, {"key": "B", "text": "3颗"}, {"key": "C", "text": "4颗"}, {"key": "D", "text": "2颗"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "11", "text": "下列品种无需全身剃毛造型，仅需基础护理的是（）**", "options": [{"key": "A", "text": "贵宾犬"}, {"key": "B", "text": "比熊犬"}, {"key": "C", "text": "法斗犬（短毛）"}, {"key": "D", "text": "雪纳瑞"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "12", "text": "巨型雪纳瑞属于（）**", "options": [{"key": "A", "text": "工作犬"}, {"key": "B", "text": "狩猎犬"}, {"key": "C", "text": "玩具犬"}, {"key": "D", "text": "其他"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "13", "text": "玩具犬组中不包括（）**", "options": [{"key": "A", "text": "博美"}, {"key": "B", "text": "玩具贵宾"}, {"key": "C", "text": "北京犬"}, {"key": "D", "text": "比雄"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "14", "text": "狩猎犬组中不包含（）**", "options": [{"key": "A", "text": "哈士奇"}, {"key": "B", "text": "阿富汗猎犬"}, {"key": "C", "text": "比格猎兔犬"}, {"key": "D", "text": "腊肠"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "15", "text": "枪猎犬组中不包含（）**", "options": [{"key": "A", "text": "拉布拉多"}, {"key": "B", "text": "金毛寻回"}, {"key": "C", "text": "萨摩耶"}, {"key": "D", "text": "美国可卡"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "16", "text": "牧羊犬组中不包括（）**", "options": [{"key": "A", "text": "古代牧羊犬"}, {"key": "B", "text": "柯基"}, {"key": "C", "text": "边境牧羊犬"}, {"key": "D", "text": "凯莉蓝"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "17", "text": "工作犬组中不包括（）**", "options": [{"key": "A", "text": "杜宾"}, {"key": "B", "text": "八吉度"}, {"key": "C", "text": "圣伯纳"}, {"key": "D", "text": "纽芬兰"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "18", "text": "梗类犬组中不包括（）**", "options": [{"key": "A", "text": "猎狐梗"}, {"key": "B", "text": "软毛麦色"}, {"key": "C", "text": "喜乐蒂"}, {"key": "D", "text": "西高地"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "19", "text": "家庭犬组中不包括（）**", "options": [{"key": "A", "text": "西施"}, {"key": "B", "text": "比雄"}, {"key": "C", "text": "贵宾"}, {"key": "D", "text": "拉萨"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "20", "text": "适合博美俊介装造型修剪的犬只要符合（）**", "options": [{"key": "A", "text": "毛量丰厚浓密"}, {"key": "B", "text": "口吻部较短"}, {"key": "C", "text": "眼睛大而圆"}, {"key": "D", "text": "以上都符合"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "21", "text": "蓝黑色舌头、悉容不展的表情是（）独有的特征**", "options": [{"key": "A", "text": "卷毛比熊犬"}, {"key": "B", "text": "丝毛梗"}, {"key": "C", "text": "松狮犬"}, {"key": "D", "text": "萨摩耶犬"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "22", "text": "腊肠犬产地是（）**", "options": [{"key": "A", "text": "英国"}, {"key": "B", "text": "德国"}, {"key": "C", "text": "法国"}, {"key": "D", "text": "意大利"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "23", "text": "金毛寻回犬的产地是（）**", "options": [{"key": "A", "text": "美国"}, {"key": "B", "text": "英国"}, {"key": "C", "text": "德国"}, {"key": "D", "text": "澳大利亚"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "24", "text": "松狮犬是（）特有的犬种**", "options": [{"key": "A", "text": "日本"}, {"key": "B", "text": "中国"}, {"key": "C", "text": "英国"}, {"key": "D", "text": "法国"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "25", "text": "灵缇的产地是（）**", "options": [{"key": "A", "text": "意大利"}, {"key": "B", "text": "希腊"}, {"key": "C", "text": "埃及"}, {"key": "D", "text": "土耳其"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "26", "text": "秋田犬是（）的国犬**", "options": [{"key": "A", "text": "中国"}, {"key": "B", "text": "日本"}, {"key": "C", "text": "英国"}, {"key": "D", "text": "美国"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "27", "text": "英国养犬俱乐部的简称是（）**", "options": [{"key": "A", "text": "AKC"}, {"key": "B", "text": "KC"}, {"key": "C", "text": "FCI"}, {"key": "D", "text": "KKC"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "28", "text": "美国养犬俱乐部简称是（）**", "options": [{"key": "A", "text": "AKC"}, {"key": "B", "text": "KC"}, {"key": "C", "text": "FCI"}, {"key": "D", "text": "KKC"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "29", "text": "世界畜犬联盟的简称是（）**", "options": [{"key": "A", "text": "AKC"}, {"key": "B", "text": "KC"}, {"key": "C", "text": "FCI"}, {"key": "D", "text": "JKC"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "30", "text": "贵宾犬按体型分为（）**", "options": [{"key": "A", "text": "玩具型、标准型和巨型"}, {"key": "B", "text": "迷你型、玩具型和巨型"}, {"key": "C", "text": "迷你型、标准型和巨型"}, {"key": "D", "text": "玩具型、迷你型和标准型"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "31", "text": "贵宾犬标准美容中会出现（）个V字**", "options": [{"key": "A", "text": "2个"}, {"key": "B", "text": "3个"}, {"key": "C", "text": "4个"}, {"key": "D", "text": "5个"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "32", "text": "贵宾犬头冠最高点位于（）**", "options": [{"key": "A", "text": "内眼角上方"}, {"key": "B", "text": "外眼角上方"}, {"key": "C", "text": "头冠中心点"}, {"key": "D", "text": "以上都不是"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "33", "text": "贵宾犬两眼之间的毛发（）**", "options": [{"key": "A", "text": "不做修剪"}, {"key": "B", "text": "剃V字"}, {"key": "C", "text": "剃倒V"}, {"key": "D", "text": "不超过上眼皮剃倒V"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "34", "text": "贵宾犬尾球最高点（）**", "options": [{"key": "A", "text": "与头顶平行"}, {"key": "B", "text": "不超过眼角水平线"}, {"key": "C", "text": "没有要求"}, {"key": "D", "text": "越高越好"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "35", "text": "贵宾犬股线修剪方式（）**", "options": [{"key": "A", "text": "坐骨端至尾根45度与背线连接"}, {"key": "B", "text": "坐骨端至尾根30度与背线连接"}, {"key": "C", "text": "坐骨端至尾根15度与背线连接"}, {"key": "D", "text": "坐骨端至尾根5度与背线连接"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "36", "text": "贵宾犬俯视呈现（）**", "options": [{"key": "A", "text": "可乐瓶形"}, {"key": "B", "text": "圆球形"}, {"key": "C", "text": "长方形"}, {"key": "D", "text": "正方形"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "37", "text": "贵宾犬腰线位于（）**", "options": [{"key": "A", "text": "后肢前侧"}, {"key": "B", "text": "垂皮"}, {"key": "C", "text": "最后一根肋骨"}, {"key": "D", "text": "股线前侧"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "38", "text": "贵宾犬胸部最高点位于（）**", "options": [{"key": "A", "text": "喉结"}, {"key": "B", "text": "喉结下一指"}, {"key": "C", "text": "胸骨"}, {"key": "D", "text": "胸骨下两指"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "39", "text": "贵宾犬美容时两内眼角之间（）**", "options": [{"key": "A", "text": "剃V字"}, {"key": "B", "text": "不做修剪"}, {"key": "C", "text": "剃倒V"}, {"key": "D", "text": "剃短"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "40", "text": "贵宾犬的耳位位于（）**", "options": [{"key": "A", "text": "外眼角的水平延长线"}, {"key": "B", "text": "内眼角的水平延长线"}, {"key": "C", "text": "头顶"}, {"key": "D", "text": "嘴角"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "41", "text": "贵宾犬口吻部描述中：鼻镜到额段的长度（）额段到枕骨的距离**", "options": [{"key": "A", "text": "小于"}, {"key": "B", "text": "等于"}, {"key": "C", "text": "大于"}, {"key": "D", "text": "2倍于"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "42", "text": "贵宾犬尾球定位距尾根（）**", "options": [{"key": "A", "text": "1/3"}, {"key": "B", "text": "1/2"}, {"key": "C", "text": "2/3"}, {"key": "D", "text": "尾尖"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "43", "text": "贵宾犬标准装\"马鞍位\"应位于（）**", "options": [{"key": "A", "text": "第3—4肋骨之间"}, {"key": "B", "text": "第5—6肋骨之间"}, {"key": "C", "text": "第7—8肋骨之间"}, {"key": "D", "text": "第9—10肋骨之间"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "44", "text": "博美犬胸部最低点位于（）**", "options": [{"key": "A", "text": "喉结"}, {"key": "B", "text": "胸骨上一指"}, {"key": "C", "text": "胸骨"}, {"key": "D", "text": "两前腿内侧中间点"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "45", "text": "博美犬胸部最高点位于（）**", "options": [{"key": "A", "text": "喉结"}, {"key": "B", "text": "胸骨"}, {"key": "C", "text": "喉结下一指"}, {"key": "D", "text": "两前腿内侧"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "46", "text": "博美犬的耳尖需要修剪成（）**", "options": [{"key": "A", "text": "圆弧型"}, {"key": "B", "text": "三角形"}, {"key": "C", "text": "小圆弧型"}, {"key": "D", "text": "直线"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "47", "text": "博美的尾巴可以修剪成（）形状**", "options": [{"key": "A", "text": "球形"}, {"key": "B", "text": "方形"}, {"key": "C", "text": "扇形"}, {"key": "D", "text": "三角形"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "48", "text": "博美犬要将足部（）**", "options": [{"key": "A", "text": "修剪成圆形"}, {"key": "B", "text": "修出猫爪型"}, {"key": "C", "text": "不做修剪"}, {"key": "D", "text": "随意"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "49", "text": "博美夏装造型的背部应使用（）电剪刀头**", "options": [{"key": "A", "text": "10#"}, {"key": "B", "text": "15#"}, {"key": "C", "text": "4F"}, {"key": "D", "text": "7#"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "50", "text": "雪纳瑞头部最短留毛长度位于（）**", "options": [{"key": "A", "text": "眉毛"}, {"key": "B", "text": "耳朵"}, {"key": "C", "text": "胡须"}, {"key": "D", "text": "头顶"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "51", "text": "雪纳瑞面部修剪后应呈现（）**", "options": [{"key": "A", "text": "圆形"}, {"key": "B", "text": "桶椭圆形"}, {"key": "C", "text": "矩形"}, {"key": "D", "text": "方形"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "52", "text": "雪纳瑞两眉之间修剪出的宽度（）**", "options": [{"key": "A", "text": "约1厘米"}, {"key": "B", "text": "尽量窄些"}, {"key": "C", "text": "尽量宽些"}, {"key": "D", "text": "随意"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "53", "text": "雪纳瑞的腹线呈现（）**", "options": [{"key": "A", "text": "直线"}, {"key": "B", "text": "斜线"}, {"key": "C", "text": "弧形"}, {"key": "D", "text": "圆形"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "54", "text": "雪纳瑞身体呈（），身长与身高比例为1:1**", "options": [{"key": "A", "text": "长方形"}, {"key": "B", "text": "正方形"}, {"key": "C", "text": "圆形"}, {"key": "D", "text": "梯形"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "55", "text": "雪纳瑞做美容时不会使用到（）**", "options": [{"key": "A", "text": "针梳"}, {"key": "B", "text": "分界梳"}, {"key": "C", "text": "开结梳"}, {"key": "D", "text": "排梳"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "56", "text": "雪纳瑞后肢外侧剃的位置在（）**", "options": [{"key": "A", "text": "生殖器至飞节"}, {"key": "B", "text": "垂皮至飞节"}, {"key": "C", "text": "腰腹最低点至飞节下两指"}, {"key": "D", "text": "腰腹最低点至飞节上两指"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "57", "text": "雪纳瑞属于（）犬种，为保持毛质特性更适合采用拔毛的美容方式**", "options": [{"key": "A", "text": "软毛"}, {"key": "B", "text": "刚毛"}, {"key": "C", "text": "卷毛"}, {"key": "D", "text": "丝毛"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "58", "text": "雪纳瑞按照体型分为（）三种**", "options": [{"key": "A", "text": "迷你、标准、巨型"}, {"key": "B", "text": "玩具、标准、大型"}, {"key": "C", "text": "小型、中型、大型"}, {"key": "D", "text": "短毛、长毛、卷毛"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "59", "text": "雪纳瑞背线（）**", "options": [{"key": "A", "text": "水平或前高后低略倾向下的斜线"}, {"key": "B", "text": "明显拱起"}, {"key": "C", "text": "明显凹陷"}, {"key": "D", "text": "任意形状"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "60", "text": "剃雪纳瑞背部时应使用（）电剪刀头**", "options": [{"key": "A", "text": "30#"}, {"key": "B", "text": "15#"}, {"key": "C", "text": "10#"}, {"key": "D", "text": "7F"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "61", "text": "修剪美国可卡的头花时更适合使用（）**", "options": [{"key": "A", "text": "直剪"}, {"key": "B", "text": "牙剪"}, {"key": "C", "text": "小直剪"}, {"key": "D", "text": "弯剪"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "62", "text": "美国可卡的脚圆应修剪成（）**", "options": [{"key": "A", "text": "圆弧形"}, {"key": "B", "text": "圆柱形"}, {"key": "C", "text": "平行地面"}, {"key": "D", "text": "碗底形"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "63", "text": "美国可卡剃至嘴部皱褶处时（）**", "options": [{"key": "A", "text": "反复多次剃除干净"}, {"key": "B", "text": "正常剃过即可"}, {"key": "C", "text": "将皱褶处皮肤拉伸展开再剃"}, {"key": "D", "text": "使用30#刀头剃的更干净"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "64", "text": "美国可卡头部呈（）**", "options": [{"key": "A", "text": "平坦"}, {"key": "B", "text": "圆拱形，额段90度"}, {"key": "C", "text": "尖锐"}, {"key": "D", "text": "扁平"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "65", "text": "赛级可卡\"围裙\"下摆应呈（）**", "options": [{"key": "A", "text": "水平"}, {"key": "B", "text": "30°前倾"}, {"key": "C", "text": "45°后倾"}, {"key": "D", "text": "自然垂落"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "66", "text": "使用7F刀头逆毛剃可卡背部，留毛长度（）**", "options": [{"key": "A", "text": "3mm"}, {"key": "B", "text": "6mm"}, {"key": "C", "text": "9mm"}, {"key": "D", "text": "12mm"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "67", "text": "英国可卡比美国可卡的体型（）**", "options": [{"key": "A", "text": "小"}, {"key": "B", "text": "大"}, {"key": "C", "text": "相等"}, {"key": "D", "text": "无法比较"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "68", "text": "美国可卡美容时耳部剃（）**", "options": [{"key": "A", "text": "一半至2/3"}, {"key": "B", "text": "全部剃光"}, {"key": "C", "text": "不剃"}, {"key": "D", "text": "剃1/4"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "69", "text": "美国可卡的面部需用（）的电剪刀头逆毛剃光**", "options": [{"key": "A", "text": "最短留毛"}, {"key": "B", "text": "最长留毛"}, {"key": "C", "text": "任意"}, {"key": "D", "text": "7F"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "70", "text": "西施犬圆头夏装头部第一步需要修剪（）来确定整个头部的大小**", "options": [{"key": "A", "text": "眼睛上方的毛发"}, {"key": "B", "text": "超过鼻尖的毛发"}, {"key": "C", "text": "头顶上方的毛发"}, {"key": "D", "text": "超过喉结的毛发"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "71", "text": "西施犬尾位（）**", "options": [{"key": "A", "text": "高紧贴背部，尾尖笔直不弯曲，静态时搭在身体一侧"}, {"key": "B", "text": "低垂"}, {"key": "C", "text": "翘起"}, {"key": "D", "text": "卷曲"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "72", "text": "西施犬的尾巴应修剪成（）**", "options": [{"key": "A", "text": "球形"}, {"key": "B", "text": "扇形"}, {"key": "C", "text": "方形"}, {"key": "D", "text": "锥形"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "73", "text": "比熊\"口箍\"修剪时，剪刀与鼻背角度（）**", "options": [{"key": "A", "text": "15°"}, {"key": "B", "text": "30°"}, {"key": "C", "text": "45°"}, {"key": "D", "text": "90°"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "74", "text": "比熊球型头修剪时，枕骨上方应保留的\"盖毛\"长度（）**", "options": [{"key": "A", "text": "0.5cm"}, {"key": "B", "text": "1cm"}, {"key": "C", "text": "1.5cm"}, {"key": "D", "text": "2cm"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "75", "text": "比熊犬腰线的正确描述是（）**", "options": [{"key": "A", "text": "腰线清晰"}, {"key": "B", "text": "拥有夸张的腰部线条"}, {"key": "C", "text": "没有腰线"}, {"key": "D", "text": "成阴影不明显的腰线"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "76", "text": "北京犬后肢修剪最高点位于（）**", "options": [{"key": "A", "text": "尾根"}, {"key": "B", "text": "飞节"}, {"key": "C", "text": "坐骨端"}, {"key": "D", "text": "飞节上一指"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "77", "text": "赛级西施\"刘海\"分缝应呈（）**", "options": [{"key": "A", "text": "一字"}, {"key": "B", "text": "中分"}, {"key": "C", "text": "偏分"}, {"key": "D", "text": "圆弧"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "78", "text": "赛级古牧\"头顶髻\"用橡皮筋固定位置（）**", "options": [{"key": "A", "text": "枕骨尖"}, {"key": "B", "text": "额段中点"}, {"key": "C", "text": "耳基连线中点"}, {"key": "D", "text": "顶结区最高点"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "79", "text": "用于梳理宠物毛发、解开轻微毛结，适合日常基础梳理的工具是（）**", "options": [{"key": "A", "text": "针梳"}, {"key": "B", "text": "排梳"}, {"key": "C", "text": "开结刀"}, {"key": "D", "text": "剃毛器"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "80", "text": "用于精准修剪宠物造型、修剪细节部位（如眼部、脚部）的剪刀是（）**", "options": [{"key": "A", "text": "直剪"}, {"key": "B", "text": "弯剪"}, {"key": "C", "text": "牙剪"}, {"key": "D", "text": "小弯剪/精修剪"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "81", "text": "处理严重毛结、毛块，避免硬扯伤害宠物的专用工具是（）**", "options": [{"key": "A", "text": "排梳"}, {"key": "B", "text": "开结刀/开结梳"}, {"key": "C", "text": "普通梳子"}, {"key": "D", "text": "剃毛器直接剃除"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "82", "text": "宠物吹风机/吹水机的核心作用不包括（）**", "options": [{"key": "A", "text": "快速吹干毛发，防止潮湿引发皮肤病"}, {"key": "B", "text": "吹开毛发，梳理顺毛"}, {"key": "C", "text": "烘烤宠物，高温烘干"}, {"key": "D", "text": "吹除浮毛和灰尘"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "83", "text": "修剪宠物指甲时，专用工具是（）**", "options": [{"key": "A", "text": "普通剪刀"}, {"key": "B", "text": "宠物指甲剪（趾甲剪）"}, {"key": "C", "text": "菜刀"}, {"key": "D", "text": "修眉剪"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "84", "text": "关于电动磨爪器的叙述，正确的是（）**", "options": [{"key": "A", "text": "使用时转速应调至最大，以缩短时间"}, {"key": "B", "text": "大型犬只不需使用"}, {"key": "C", "text": "趾爪修剪后流血应暂停磨爪"}, {"key": "D", "text": "中型犬只不需使用"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "85", "text": "下列（）不是剪趾爪所需使用的工具**", "options": [{"key": "A", "text": "止血粉"}, {"key": "B", "text": "趾爪剪"}, {"key": "C", "text": "磨趾爪器"}, {"key": "D", "text": "止血钳"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "86", "text": "下列不是止血钳在美容工作的用途的是（）**", "options": [{"key": "A", "text": "夹除外寄生虫"}, {"key": "B", "text": "剪毛"}, {"key": "C", "text": "绑头花"}, {"key": "D", "text": "辅助清洁耳道"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "87", "text": "美容修剪过程中不会使用到的美容工具为（）**", "options": [{"key": "A", "text": "针梳"}, {"key": "B", "text": "排梳"}, {"key": "C", "text": "止血钳"}, {"key": "D", "text": "剪刀"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "88", "text": "下列不是针梳的功能的是（）**", "options": [{"key": "A", "text": "拆除打结"}, {"key": "B", "text": "不能促进皮肤新陈代谢"}, {"key": "C", "text": "梳理被毛"}, {"key": "D", "text": "将卷曲被毛拉直"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "89", "text": "电剪、美容剪等使用完毕须（）**", "options": [{"key": "A", "text": "直接放回工具箱"}, {"key": "B", "text": "擦拭干净、上油保养"}, {"key": "C", "text": "浸泡在水里"}, {"key": "D", "text": "随意放置"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "90", "text": "通常美容时小电剪不适用于（）**", "options": [{"key": "A", "text": "导尿毛整理"}, {"key": "B", "text": "肛门四周剔除"}, {"key": "C", "text": "雪纳瑞背部造型"}, {"key": "D", "text": "脚底毛修整"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "91", "text": "剃贵宾脚时应使用（）电剪刀头**", "options": [{"key": "A", "text": "30#"}, {"key": "B", "text": "15#"}, {"key": "C", "text": "10#"}, {"key": "D", "text": "7#"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "92", "text": "剃贵宾脸时应使用（）电剪刀头**", "options": [{"key": "A", "text": "30#"}, {"key": "B", "text": "15#"}, {"key": "C", "text": "10#"}, {"key": "D", "text": "7#"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "93", "text": "使用10刀头顺毛剃贵宾犬背部时，最佳进刀角度为（）**", "options": [{"key": "A", "text": "5°"}, {"key": "B", "text": "15°"}, {"key": "C", "text": "30°"}, {"key": "D", "text": "45°"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "94", "text": "剃夏装造型时应使用（）电剪刀头**", "options": [{"key": "A", "text": "15#"}, {"key": "B", "text": "10#"}, {"key": "C", "text": "7F"}, {"key": "D", "text": "4F"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "95", "text": "剃可卡背部时应使用（）电剪刀头**", "options": [{"key": "A", "text": "30#"}, {"key": "B", "text": "15#"}, {"key": "C", "text": "10#"}, {"key": "D", "text": "7F"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "96", "text": "美容剪的刀刃角度是多少度最适合剪毛？**", "options": [{"key": "A", "text": "25°～30°"}, {"key": "B", "text": "35°～40°"}, {"key": "C", "text": "45°～50°"}, {"key": "D", "text": "55°～60°"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "97", "text": "8寸以上剪刀主要用于修剪（）**", "options": [{"key": "A", "text": "美容造型"}, {"key": "B", "text": "四肢"}, {"key": "C", "text": "造型精细"}, {"key": "D", "text": "头部造型"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "98", "text": "7寸直剪适用于（）修剪**", "options": [{"key": "A", "text": "美容造型"}, {"key": "B", "text": "大面积"}, {"key": "C", "text": "造型精细"}, {"key": "D", "text": "头部造型"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "99", "text": "小直剪主要用于修剪（）**", "options": [{"key": "A", "text": "背部"}, {"key": "B", "text": "四肢"}, {"key": "C", "text": "头部"}, {"key": "D", "text": "胸部"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "100", "text": "鱼骨剪在美容修剪过程中与（）的作用更加接近**", "options": [{"key": "A", "text": "大直剪"}, {"key": "B", "text": "小直剪"}, {"key": "C", "text": "牙剪"}, {"key": "D", "text": "弯剪"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "101", "text": "使用牙剪可以让美容造型（）**", "options": [{"key": "A", "text": "速度更快"}, {"key": "B", "text": "修剪过的毛发更自然"}, {"key": "C", "text": "角度更加准确"}, {"key": "D", "text": "造型更加精致"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "102", "text": "运剪口诀中正确的是（）**", "options": [{"key": "A", "text": "从上到下从左至右"}, {"key": "B", "text": "从后向前动刃在前"}, {"key": "C", "text": "眼明手快胆大心细"}, {"key": "D", "text": "以上都是"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "103", "text": "电剪保养\"滴油三点法\"不包括（）**", "options": [{"key": "A", "text": "刀齿尖"}, {"key": "B", "text": "刀背中缝"}, {"key": "C", "text": "刀尾铰链"}, {"key": "D", "text": "电机进气孔"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "104", "text": "电剪在使用过程中应（）**", "options": [{"key": "A", "text": "垂直于皮肤"}, {"key": "B", "text": "平行于皮肤，迅速剃过"}, {"key": "C", "text": "倾斜30度"}, {"key": "D", "text": "随意角度"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "105", "text": "电剪刀头在首次使用时需要先（）**", "options": [{"key": "A", "text": "清洗干净"}, {"key": "B", "text": "去除防锈层"}, {"key": "C", "text": "加油润滑"}, {"key": "D", "text": "晾干"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "106", "text": "电剪刀头型号30号代表刀头齿距约为（）**", "options": [{"key": "A", "text": "0.5mm"}, {"key": "B", "text": "1.0mm"}, {"key": "C", "text": "1.5mm"}, {"key": "D", "text": "2.0mm"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "107", "text": "分界梳在使用时不常用于（）**", "options": [{"key": "A", "text": "长毛犬背线划分"}, {"key": "B", "text": "犬种包毛"}, {"key": "C", "text": "扎小辫"}, {"key": "D", "text": "眉毛梳理"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "108", "text": "犬耳粉主要作用（）**", "options": [{"key": "A", "text": "消炎"}, {"key": "B", "text": "干燥"}, {"key": "C", "text": "麻醉"}, {"key": "D", "text": "止血"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "109", "text": "面虱梳因其外形小巧齿间距较密，不适合梳理（）**", "options": [{"key": "A", "text": "眼周"}, {"key": "B", "text": "眉毛"}, {"key": "C", "text": "腿部"}, {"key": "D", "text": "嘴边"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "110", "text": "针梳不适合梳理（）**", "options": [{"key": "A", "text": "贵宾"}, {"key": "B", "text": "比雄"}, {"key": "C", "text": "雪纳瑞"}, {"key": "D", "text": "斗牛"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "111", "text": "柄梳不适合梳理（）**", "options": [{"key": "A", "text": "西施"}, {"key": "B", "text": "马尔济斯"}, {"key": "C", "text": "约克夏"}, {"key": "D", "text": "比雄"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "112", "text": "不适合使用鬃毛梳的犬种是（）**", "options": [{"key": "A", "text": "杜宾"}, {"key": "B", "text": "松狮"}, {"key": "C", "text": "吉娃娃"}, {"key": "D", "text": "灵缇"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "113", "text": "不适合制作美容师梳的材质是（）**", "options": [{"key": "A", "text": "铝"}, {"key": "B", "text": "钢"}, {"key": "C", "text": "铁"}, {"key": "D", "text": "塑料"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "114", "text": "开结时采取（）的方式最容易对犬只造成外伤**", "options": [{"key": "A", "text": "用手撕"}, {"key": "B", "text": "电剪剃"}, {"key": "C", "text": "剪刀剪"}, {"key": "D", "text": "开结刀梳开"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "115", "text": "长毛犬开结首选工具（）**", "options": [{"key": "A", "text": "针梳"}, {"key": "B", "text": "排梳"}, {"key": "C", "text": "解结梳"}, {"key": "D", "text": "柄梳"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "116", "text": "马尔济斯梳理毛发时应避免使用（）**", "options": [{"key": "A", "text": "针梳"}, {"key": "B", "text": "柄梳"}, {"key": "C", "text": "鬃毛梳"}, {"key": "D", "text": "排梳"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "117", "text": "拔毛刀不可以用于（）的美容操作**", "options": [{"key": "A", "text": "贝灵顿梗"}, {"key": "B", "text": "雪纳瑞"}, {"key": "C", "text": "可卡"}, {"key": "D", "text": "阿富汗"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "118", "text": "包毛起到的主要作用是（）**", "options": [{"key": "A", "text": "易于打理"}, {"key": "B", "text": "方便运动"}, {"key": "C", "text": "漂亮可爱"}, {"key": "D", "text": "利于毛发生长"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "119", "text": "剪刀上bk70-6540标注的70为剪刀的（）**", "options": [{"key": "A", "text": "尺寸"}, {"key": "B", "text": "材质"}, {"key": "C", "text": "硬度"}, {"key": "D", "text": "型号"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "120", "text": "万能梗属于梗类犬里体型（）的犬种**", "options": [{"key": "A", "text": "小型"}, {"key": "B", "text": "中等"}, {"key": "C", "text": "大型"}, {"key": "D", "text": "超大型"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "121", "text": "哪种犬种在AKC标准中明确禁止剃毛（）**", "options": [{"key": "A", "text": "松狮"}, {"key": "B", "text": "博美"}, {"key": "C", "text": "萨摩耶"}, {"key": "D", "text": "喜乐蒂"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "122", "text": "赛级雪纳瑞\"眉毛\"修剪使用的主要剪刀型号（）**", "options": [{"key": "A", "text": "7.0″直剪"}, {"key": "B", "text": "8.0″弯剪"}, {"key": "C", "text": "6.5″牙剪"}, {"key": "D", "text": "4.5″小弯剪"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "123", "text": "配制消毒药液时，需严格按照说明书比例稀释，浓度过高或过低均会影响消毒效果，该说法（）**", "options": [{"key": "A", "text": "正确"}, {"key": "B", "text": "错误"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "124", "text": "稀释比例1∶4的漂白水，有效氯浓度约为（）**", "options": [{"key": "A", "text": "0.1%"}, {"key": "B", "text": "0.5%"}, {"key": "C", "text": "1%"}, {"key": "D", "text": "1.5%"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "125", "text": "下列哪种香波属于角质溶解型（）**", "options": [{"key": "A", "text": "燕麦"}, {"key": "B", "text": "硫磺"}, {"key": "C", "text": "茶树"}, {"key": "D", "text": "椰子油"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "126", "text": "贵宾犬\"V字脸\"收刀点应在（）**", "options": [{"key": "A", "text": "外眼角垂直线"}, {"key": "B", "text": "嘴角垂直线"}, {"key": "C", "text": "耳基前缘"}, {"key": "D", "text": "喉结节"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "127", "text": "给宠物洗澡的水温，适宜范围是（）**", "options": [{"key": "A", "text": "20-25℃"}, {"key": "B", "text": "35-38℃（接近宠物体温）"}, {"key": "C", "text": "40-45℃"}, {"key": "D", "text": "冷水即可"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "128", "text": "给宠物洗护时，沐浴露的使用要求是（）**", "options": [{"key": "A", "text": "用人用洗发水、沐浴露替代"}, {"key": "B", "text": "选用宠物专用沐浴露，根据毛发类型选择"}, {"key": "C", "text": "随意使用清洁用品"}, {"key": "D", "text": "大量使用沐浴露，越多越干净"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "129", "text": "宠物洗澡时，重点避开的部位是（）**", "options": [{"key": "A", "text": "背部"}, {"key": "B", "text": "腹部"}, {"key": "C", "text": "眼睛、鼻腔、耳道"}, {"key": "D", "text": "腿部"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "130", "text": "修剪宠物指甲时，核心禁忌是（）**", "options": [{"key": "A", "text": "剪短指甲"}, {"key": "B", "text": "剪到血线（活肉）"}, {"key": "C", "text": "打磨指甲"}, {"key": "D", "text": "清理指甲污垢"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "131", "text": "犬类肛门腺清理的主要目的是（）**", "options": [{"key": "A", "text": "去除异味，预防肛门腺发炎"}, {"key": "B", "text": "单纯美容需求"}, {"key": "C", "text": "治疗疾病"}, {"key": "D", "text": "减少排便"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "132", "text": "猫咪美容时，最容易出现应激反应，核心处理原则是（）**", "options": [{"key": "A", "text": "强行按住完成操作"}, {"key": "B", "text": "动作轻柔、快速，避免过度折腾，应激立即停止"}, {"key": "C", "text": "大声呵斥"}, {"key": "D", "text": "长时间美容"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "133", "text": "宠物毛发吹干的核心要求是（）**", "options": [{"key": "A", "text": "表面吹干即可，内层潮湿没关系"}, {"key": "B", "text": "完全吹干、吹透，尤其是根部和底层绒毛"}, {"key": "C", "text": "自然晾干"}, {"key": "D", "text": "半干半湿"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "134", "text": "对不喜欢洗澡的幼犬，以下（）的做法是不适当的**", "options": [{"key": "A", "text": "轻轻抚摸"}, {"key": "B", "text": "莲蓬头从空中直喷"}, {"key": "C", "text": "利用温水浸泡"}, {"key": "D", "text": "用手托住犬只胸部"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "135", "text": "宠物洗澡时水温应控制在（）℃之间**", "options": [{"key": "A", "text": "35-37"}, {"key": "B", "text": "37-40"}, {"key": "C", "text": "40-42"}, {"key": "D", "text": "30-35"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "136", "text": "猫洗澡最佳环境噪音控制（）**", "options": [{"key": "A", "text": "≤45dB"}, {"key": "B", "text": "≤55dB"}, {"key": "C", "text": "≤65dB"}, {"key": "D", "text": "≤75dB"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "137", "text": "宠物皮肤pH值正常范围是（）**", "options": [{"key": "A", "text": "4.5—5.5"}, {"key": "B", "text": "5.5—6.5"}, {"key": "C", "text": "6.5—7.5"}, {"key": "D", "text": "7.5—8.5"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "138", "text": "宠物专用香波应具备哪些特点（）**", "options": [{"key": "A", "text": "pH值中性、含天然成分、无刺激性香精"}, {"key": "B", "text": "强力去污"}, {"key": "C", "text": "浓香型"}, {"key": "D", "text": "增白增亮"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "139", "text": "在使用吹风设备对犬只进行护理时，风筒应距离犬只（）以上**", "options": [{"key": "A", "text": "5cm"}, {"key": "B", "text": "10cm"}, {"key": "C", "text": "15cm"}, {"key": "D", "text": "20cm"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "140", "text": "长毛犬洗澡后速干最佳风温（）**", "options": [{"key": "A", "text": "25℃"}, {"key": "B", "text": "35℃"}, {"key": "C", "text": "45℃"}, {"key": "D", "text": "55℃"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "141", "text": "宠物洗澡时，水温应控制在38-40℃，与宠物正常体温接近，以下正确的是（）**", "options": [{"key": "A", "text": "犬正常体温36度以下"}, {"key": "B", "text": "犬正常体温37度"}, {"key": "C", "text": "犬正常体温38-39度"}, {"key": "D", "text": "犬正常体温40度以上"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "142", "text": "给犬只洗澡时错误的做法是（）**", "options": [{"key": "A", "text": "使用犬只专用浴液"}, {"key": "B", "text": "先将所需用品用具准备好"}, {"key": "C", "text": "脏了就要洗澡才能保持干净"}, {"key": "D", "text": "彻底将毛发吹干"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "143", "text": "给犬只做基础护理时的操作顺序是（）**", "options": [{"key": "A", "text": "剪指甲→拔耳毛→梳毛→洗澡"}, {"key": "B", "text": "拔耳毛→梳毛→剪指甲→洗澡"}, {"key": "C", "text": "梳毛→剪指甲→洗澡→拔耳毛"}, {"key": "D", "text": "洗澡→梳毛→剪指甲→拔耳毛"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "144", "text": "给皮肤敏感犬只进行护理时不能（）**", "options": [{"key": "A", "text": "选择性质温和的产品"}, {"key": "B", "text": "水温适宜不超过40度"}, {"key": "C", "text": "操作轻柔且迅速"}, {"key": "D", "text": "反复进行多次操作"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "145", "text": "烘干箱需要先预热一段时间然后再正常使用，该说法（）**", "options": [{"key": "A", "text": "正确"}, {"key": "B", "text": "错误"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "146", "text": "浴液在稀释的过程中应该先放浴液后加水挤出多余泡沫后使用，该说法（）**", "options": [{"key": "A", "text": "正确"}, {"key": "B", "text": "错误"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "147", "text": "护毛素稀释时要使用高水温并且反复晃匀后使用，该说法（）**", "options": [{"key": "A", "text": "正确"}, {"key": "B", "text": "错误"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "148", "text": "狗狗的\"飞节\"是指哪个部位？**", "options": [{"key": "A", "text": "膝盖"}, {"key": "B", "text": "腿部关节"}, {"key": "C", "text": "肘部"}, {"key": "D", "text": "脚踝"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "149", "text": "狗狗的\"马蹄爪\"是指哪种足部问题？**", "options": [{"key": "A", "text": "足垫过度生长"}, {"key": "B", "text": "足趾变形"}, {"key": "C", "text": "足部感染"}, {"key": "D", "text": "足部脱毛"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "150", "text": "犬只的疫苗注射采取（）的方式**", "options": [{"key": "A", "text": "静脉注射"}, {"key": "B", "text": "皮下注射"}, {"key": "C", "text": "肌肉注射"}, {"key": "D", "text": "口服"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "151", "text": "心丝虫的感染途径是（）**", "options": [{"key": "A", "text": "跳蚤"}, {"key": "B", "text": "虱子"}, {"key": "C", "text": "苍蝇"}, {"key": "D", "text": "蚊子"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "152", "text": "犬瘟热测试试纸的英文简称是（）**", "options": [{"key": "A", "text": "CCV"}, {"key": "B", "text": "CDV"}, {"key": "C", "text": "PV"}, {"key": "D", "text": "TOXO"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "153", "text": "犬只出现精神沉郁、食欲下降、血尿等症状时，正确的做法是（）**", "options": [{"key": "A", "text": "自行给药处理"}, {"key": "B", "text": "减少喂食观察"}, {"key": "C", "text": "立即送往宠物医院检查治疗"}, {"key": "D", "text": "给犬只洗澡降温"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "154", "text": "猫咪的耳螨主要是由什么引起的？**", "options": [{"key": "A", "text": "细菌感染"}, {"key": "B", "text": "真菌感染"}, {"key": "C", "text": "虫卵寄生"}, {"key": "D", "text": "过敏反应"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "155", "text": "犬只中暑时急救措施中不能（）**", "options": [{"key": "A", "text": "移至通风阴凉处"}, {"key": "B", "text": "催吐"}, {"key": "C", "text": "使用冰水或酒精降温"}, {"key": "D", "text": "尽快送医"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "156", "text": "犬只体外驱虫药使用时错误的描述是（）**", "options": [{"key": "A", "text": "室内饲养也要定期驱虫"}, {"key": "B", "text": "避免长期单一使用以免产生耐药性"}, {"key": "C", "text": "服药后就不会出现体内寄生虫"}, {"key": "D", "text": "服药时按照计量不能超量使用"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "157", "text": "犬只体内驱虫药的服药间隔是（）**", "options": [{"key": "A", "text": "每月驱除体内寄生虫"}, {"key": "B", "text": "每3个月驱虫体内寄生虫"}, {"key": "C", "text": "每6个月驱虫体内寄生虫"}, {"key": "D", "text": "每9个月驱虫体内寄生虫"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "158", "text": "犬只生长阶段需求量最大的两种矿物质是（）**", "options": [{"key": "A", "text": "钙和磷"}, {"key": "B", "text": "硒和锌"}, {"key": "C", "text": "钠和钙"}, {"key": "D", "text": "锌和硒"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "159", "text": "犬只皮肤分为（）**", "options": [{"key": "A", "text": "表皮"}, {"key": "B", "text": "真皮"}, {"key": "C", "text": "皮下组织"}, {"key": "D", "text": "以上都是"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "160", "text": "犬只最常见的皮肤问题是（）**", "options": [{"key": "A", "text": "感染及伤口"}, {"key": "B", "text": "真菌及细菌"}, {"key": "C", "text": "脱毛及有头皮屑"}, {"key": "D", "text": "癌病及红肿"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "161", "text": "犬毛囊虫检查首选采样法（）**", "options": [{"key": "A", "text": "透明胶带"}, {"key": "B", "text": "挤压涂片"}, {"key": "C", "text": "皮肤刮片"}, {"key": "D", "text": "拔毛镜检"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "162", "text": "犬只常见心理活动中包括（）**", "options": [{"key": "A", "text": "占有心理"}, {"key": "B", "text": "等级心理"}, {"key": "C", "text": "嫉妒心理"}, {"key": "D", "text": "以上都有"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "163", "text": "犬只（）不属于安定信号**", "options": [{"key": "A", "text": "转移视线"}, {"key": "B", "text": "脊背部位的毛发突然炸起"}, {"key": "C", "text": "眯起眼睛"}, {"key": "D", "text": "打哈欠舔嘴唇"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "164", "text": "给猫进行美容时，最易引发应激的操作是（）**", "options": [{"key": "A", "text": "修剪脚底毛"}, {"key": "B", "text": "清洁耳道"}, {"key": "C", "text": "吹风拉毛"}, {"key": "D", "text": "剪指甲"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "165", "text": "犬只出现皮癣时正确的描述是（）**", "options": [{"key": "A", "text": "出现结痂的伤口"}, {"key": "B", "text": "会使犬只的皮肤变得油腻出现皮屑"}, {"key": "C", "text": "大部分由真菌引起需要使用抗真菌药物"}, {"key": "D", "text": "引发营养不良症状"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "166", "text": "犬只正常体温是（）**", "options": [{"key": "A", "text": "36度以下"}, {"key": "B", "text": "37度"}, {"key": "C", "text": "38-39度"}, {"key": "D", "text": "40度以上"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "167", "text": "犬只（）不属于安定信号**", "options": [{"key": "A", "text": "转移视线"}, {"key": "B", "text": "脊背部位的毛发突然炸起"}, {"key": "C", "text": "眯起眼睛"}, {"key": "D", "text": "打哈欠舔嘴唇"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "168", "text": "俯首是犬只重要的表达方式，代表了一种（）**", "options": [{"key": "A", "text": "防御行为"}, {"key": "B", "text": "邀约行为"}, {"key": "C", "text": "攻击行为"}, {"key": "D", "text": "恐惧行为"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "169", "text": "犬只犬只世界只有黑白灰三种，通过颜色呈现的深浅度进行辨识，该说法（）**", "options": [{"key": "A", "text": "正确"}, {"key": "B", "text": "错误"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "170", "text": "犬只的嗅觉发达可以辨别出（）万种不同的气味**", "options": [{"key": "A", "text": "100"}, {"key": "B", "text": "200"}, {"key": "C", "text": "300"}, {"key": "D", "text": "500"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "171", "text": "犬只的听觉是人类的（）倍**", "options": [{"key": "A", "text": "8倍"}, {"key": "B", "text": "16倍"}, {"key": "C", "text": "32倍"}, {"key": "D", "text": "64倍"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "172", "text": "通过观察犬只牙齿的磨损程度可以判断（）**", "options": [{"key": "A", "text": "体重"}, {"key": "B", "text": "年龄"}, {"key": "C", "text": "品种"}, {"key": "D", "text": "健康状况"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "173", "text": "犬只幼年时有（）颗牙齿，成年后的恒齿共（）颗**", "options": [{"key": "A", "text": "28、30"}, {"key": "B", "text": "30、42"}, {"key": "C", "text": "32、42"}, {"key": "D", "text": "28、42"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "174", "text": "成年犬口腔内含有（）颗牙齿**", "options": [{"key": "A", "text": "42"}, {"key": "B", "text": "28"}, {"key": "C", "text": "48"}, {"key": "D", "text": "32"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "175", "text": "犬只肋骨总数为（）对**", "options": [{"key": "A", "text": "11对"}, {"key": "B", "text": "12对"}, {"key": "C", "text": "13对"}, {"key": "D", "text": "14对"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "176", "text": "犬只99%的基因是相似的，剩下的1%决定了（）**", "options": [{"key": "A", "text": "体重"}, {"key": "B", "text": "品种"}, {"key": "C", "text": "颜色"}, {"key": "D", "text": "寿命"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "177", "text": "犬只耳道是（）型的结构**", "options": [{"key": "A", "text": "U型"}, {"key": "B", "text": "L型"}, {"key": "C", "text": "直筒型"}, {"key": "D", "text": "S型"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "178", "text": "耳螨是犬只（）的耳部疾病**", "options": [{"key": "A", "text": "最不常见"}, {"key": "B", "text": "最常见"}, {"key": "C", "text": "偶尔发生"}, {"key": "D", "text": "不会发生"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "179", "text": "犬只不能使用人的浴液是因为（）**", "options": [{"key": "A", "text": "人的浴液偏酸性，犬的浴液偏碱性"}, {"key": "B", "text": "人的浴液偏碱性，犬的浴液偏酸性"}, {"key": "C", "text": "价格不同"}, {"key": "D", "text": "香味不同"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "180", "text": "导致犬只经常出现摇头、抓挠等现象是由（）引起的**", "options": [{"key": "A", "text": "蚊虫叮咬"}, {"key": "B", "text": "食物过敏现象"}, {"key": "C", "text": "细菌感染"}, {"key": "D", "text": "耳部发炎或耳虫"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "181", "text": "遇到具有攻击性的犬只时可以（）**", "options": [{"key": "A", "text": "暴打制服"}, {"key": "B", "text": "佩戴防咬圈进行防护"}, {"key": "C", "text": "徒手控制"}, {"key": "D", "text": "大声恐吓"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "182", "text": "接近一只陌生犬时正确的做法是（）**", "options": [{"key": "A", "text": "伸手抚摸头部"}, {"key": "B", "text": "伸手抚摸侧腹"}, {"key": "C", "text": "让犬只熟悉味道放下戒备后轻轻抚摸"}, {"key": "D", "text": "拽住犬只的尾巴"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "183", "text": "接触陌生小型犬只时正确的做法是（）**", "options": [{"key": "A", "text": "长时间注视犬只"}, {"key": "B", "text": "快速抱起来"}, {"key": "C", "text": "从犬只身后抱起来"}, {"key": "D", "text": "缓慢蹲下伸出手让犬只嗅闻熟悉"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "184", "text": "犬只佩戴防咬圈时松紧程度应该是（）**", "options": [{"key": "A", "text": "松松的带上即可"}, {"key": "B", "text": "不能有空隙"}, {"key": "C", "text": "必须留有足够空隙"}, {"key": "D", "text": "留出两手指的空隙"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "185", "text": "保定杆的高度应（）**", "options": [{"key": "A", "text": "随意调节"}, {"key": "B", "text": "与犬只肩高相适应"}, {"key": "C", "text": "越高越好"}, {"key": "D", "text": "越低越好"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "186", "text": "猫美容保定\"布袋法\"开口应位于（）**", "options": [{"key": "A", "text": "颈部"}, {"key": "B", "text": "胸下"}, {"key": "C", "text": "腹侧"}, {"key": "D", "text": "臀后"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "187", "text": "下列哪项属于一级应激信号（）**", "options": [{"key": "A", "text": "打哈欠"}, {"key": "B", "text": "舔鼻"}, {"key": "C", "text": "瞳孔放大"}, {"key": "D", "text": "尾巴夹紧"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "188", "text": "对于身材微小的犬只在操作时不能（）**", "options": [{"key": "A", "text": "避免大幅度动作造成的伤害"}, {"key": "B", "text": "使用大功率设备"}, {"key": "C", "text": "使用小型的工具进行操作"}, {"key": "D", "text": "随时观察防止意外情况发生"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "189", "text": "给幼犬首次美容应选择（）**", "options": [{"key": "A", "text": "上午"}, {"key": "B", "text": "下午"}, {"key": "C", "text": "晚上"}, {"key": "D", "text": "任意时间"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "190", "text": "贵宾犬修剪飞节角度正确的描述是（）**", "options": [{"key": "A", "text": "坐骨端至飞节垂直修剪"}, {"key": "B", "text": "坐骨端至飞节斜线修剪"}, {"key": "C", "text": "生殖器水平线垂直向下修剪"}, {"key": "D", "text": "坐骨端至飞节平均分成2份，前1/2垂直修剪后1/2做平滑的圆弧连接"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "191", "text": "贵宾犬标准美容中，（）不属于4个V字修剪区域**", "options": [{"key": "A", "text": "两眼之间"}, {"key": "B", "text": "尾球"}, {"key": "C", "text": "前胸"}, {"key": "D", "text": "头部"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "192", "text": "贵宾犬尾球由尾根向上（）厘米左右剃成V字**", "options": [{"key": "A", "text": "1厘米"}, {"key": "B", "text": "2厘米"}, {"key": "C", "text": "3厘米"}, {"key": "D", "text": "4厘米"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "193", "text": "贵宾犬眼睛是（）为黑色或者深棕色有眼线**", "options": [{"key": "A", "text": "杏仁形"}, {"key": "B", "text": "圆形"}, {"key": "C", "text": "三角形"}, {"key": "D", "text": "椭圆形"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "194", "text": "贵宾犬颜色描述上只能是（）**", "options": [{"key": "A", "text": "单一颜色"}, {"key": "B", "text": "混合颜色"}, {"key": "C", "text": "花色"}, {"key": "D", "text": "没有限制"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "195", "text": "给犬只喂药时，不应该（）**", "options": [{"key": "A", "text": "用手抓住犬只耳朵"}, {"key": "B", "text": "将药混合在喜欢的食物中"}, {"key": "C", "text": "将药物放置舌根部位"}, {"key": "D", "text": "往口腔中注射少量水帮助犬只吞咽"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "196", "text": "宠物洗澡时水温应控制在（）℃之间，以模拟自然体温环境**", "options": [{"key": "A", "text": "35-37"}, {"key": "B", "text": "37-40"}, {"key": "C", "text": "40-42"}, {"key": "D", "text": "30-35"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "197", "text": "宠物皮肤pH值正常范围是多少？**", "options": [{"key": "A", "text": "5.5～7.5"}, {"key": "B", "text": "6.5～7.5"}, {"key": "C", "text": "7.0～8.0"}, {"key": "D", "text": "6.0～7.0"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "198", "text": "宠物犬美容过程中，用于配合剪刀挑毛的工具有（）**", "options": [{"key": "A", "text": "止血钳"}, {"key": "B", "text": "绑带"}, {"key": "C", "text": "止血钳或镊子"}, {"key": "D", "text": "剃刀"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "199", "text": "犬只容易形成毛球的部位中，最难发现到的为（）**", "options": [{"key": "A", "text": "口唇周边"}, {"key": "B", "text": "颈部"}, {"key": "C", "text": "大腿内侧"}, {"key": "D", "text": "耳朵后侧"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "200", "text": "当犬只美容时，走路的步伐不稳，不可能原因为（）**", "options": [{"key": "A", "text": "脚黏到异物"}, {"key": "B", "text": "身上有寄生虫"}, {"key": "C", "text": "关节有问题"}, {"key": "D", "text": "脚有伤口"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "201", "text": "下列哪一项不是润丝精（毛发保养品）的功用（）**", "options": [{"key": "A", "text": "保湿"}, {"key": "B", "text": "保护毛发"}, {"key": "C", "text": "防止静电"}, {"key": "D", "text": "增加毛量"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "202", "text": "宠物美容师在处理敏感皮肤时，应优先选择哪种剪毛方式？**", "options": [{"key": "A", "text": "电推剪低档位"}, {"key": "B", "text": "美容剪轻柔修剪"}, {"key": "C", "text": "圆头剪快速处理"}, {"key": "D", "text": "直剪刀一次性剪除"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "203", "text": "犬只体外驱虫药使用时错误的描述是（）**", "options": [{"key": "A", "text": "室内饲养也要定期驱虫"}, {"key": "B", "text": "避免长期单一使用以免产生耐药性"}, {"key": "C", "text": "服药后就不会出现体内寄生虫"}, {"key": "D", "text": "服药时按照计量不能超量使用"}], "answer": "C", "raw_answer": "C"}, {"type": "single", "number": "204", "text": "犬只体内驱虫药的服药间隔是（）**", "options": [{"key": "A", "text": "每月驱除体内寄生虫"}, {"key": "B", "text": "每3个月驱虫体内寄生虫"}, {"key": "C", "text": "每6个月驱虫体内寄生虫"}, {"key": "D", "text": "每9个月驱虫体内寄生虫"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "205", "text": "犬只生长阶段需求量最大的两种矿物质是（）**", "options": [{"key": "A", "text": "钙和磷"}, {"key": "B", "text": "硒和锌"}, {"key": "C", "text": "钠和钙"}, {"key": "D", "text": "锌和硒"}], "answer": "A", "raw_answer": "A"}, {"type": "single", "number": "206", "text": "犬只皮肤分为（）**", "options": [{"key": "A", "text": "表皮"}, {"key": "B", "text": "真皮"}, {"key": "C", "text": "皮下组织"}, {"key": "D", "text": "以上都是"}], "answer": "D", "raw_answer": "D"}, {"type": "single", "number": "207", "text": "犬只最常见的皮肤问题是（）**", "options": [{"key": "A", "text": "感染及伤口"}, {"key": "B", "text": "真菌及细菌"}, {"key": "C", "text": "脱毛及有头皮屑"}, {"key": "D", "text": "癌病及红肿"}], "answer": "B", "raw_answer": "B"}, {"type": "single", "number": "208", "text": "犬毛囊虫检查首选采样法（）**", "options": [{"key": "A", "text": "透明胶带"}, {"key": "B", "text": "挤压涂片"}, {"key": "C", "text": "皮肤刮片"}, {"key": "D", "text": "拔毛镜检"}], "answer": "C", "raw_answer": "C"}, {"type": "multi", "number": "1", "text": "宠物美容师在服务前，需检查宠物的基础状态包括（）**", "options": [{"key": "A", "text": "精神状态是否正常"}, {"key": "B", "text": "皮肤有无伤口、红肿、皮肤病"}, {"key": "C", "text": "有无生病、呕吐、腹泻情况"}, {"key": "D", "text": "毛发打结情况"}, {"key": "E", "text": "年龄和体重"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "2", "text": "下列属于卷毛长毛犬，需定期修剪造型的品种有（）**", "options": [{"key": "A", "text": "贵宾犬（泰迪）"}, {"key": "B", "text": "比熊犬"}, {"key": "C", "text": "法斗犬"}, {"key": "D", "text": "博美犬"}, {"key": "E", "text": "雪纳瑞"}], "answer": ["A", "B"], "raw_answer": "AB"}, {"type": "multi", "number": "3", "text": "宠物毛发打结的常见原因有（）**", "options": [{"key": "A", "text": "长期不梳理毛发"}, {"key": "B", "text": "洗澡后未吹干、未梳理"}, {"key": "C", "text": "毛发潮湿、沾染污垢"}, {"key": "D", "text": "换毛季浮毛堆积"}, {"key": "E", "text": "品种本身毛发易打结"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "4", "text": "宠物美容基础工具包含（）**", "options": [{"key": "A", "text": "针梳、排梳、开结梳"}, {"key": "B", "text": "美容剪刀（直剪、弯剪、牙剪）"}, {"key": "C", "text": "宠物指甲剪、磨甲器"}, {"key": "D", "text": "吹水机/吹风机"}, {"key": "E", "text": "宠物专用沐浴露、护毛素"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "5", "text": "给宠物洗澡的正确操作流程包括（）**", "options": [{"key": "A", "text": "先梳理毛发，解开毛结"}, {"key": "B", "text": "湿润毛发，避开眼耳口鼻"}, {"key": "C", "text": "涂抹宠物专用沐浴露，揉搓起泡"}, {"key": "D", "text": "彻底冲洗干净，无沐浴露残留"}, {"key": "E", "text": "及时吹干梳理，做好基础护理"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "6", "text": "宠物耳道清洁的正确做法有（）**", "options": [{"key": "A", "text": "使用宠物专用洗耳液"}, {"key": "B", "text": "用脱脂棉或棉签清理外耳，不深入耳道"}, {"key": "C", "text": "清理耳垢和异味，预防中耳炎"}, {"key": "D", "text": "用力掏挖耳道深处"}, {"key": "E", "text": "发现耳道红肿、流脓，建议主人就医"}], "answer": ["A", "B", "C", "E"], "raw_answer": "ABCE"}, {"type": "multi", "number": "7", "text": "宠物美容时，预防应激的措施有（）**", "options": [{"key": "A", "text": "动作轻柔，避免大声喧哗"}, {"key": "B", "text": "控制美容时间，不强行操作"}, {"key": "C", "text": "陌生宠物先安抚适应，再开始操作"}, {"key": "D", "text": "固定宠物时力度适中，不束缚过紧"}, {"key": "E", "text": "准备零食安抚，缓解紧张情绪"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "8", "text": "宠物皮肤健康护理的要点包括（）**", "options": [{"key": "A", "text": "选用专用洗护产品"}, {"key": "B", "text": "定期洗澡，彻底吹干毛发"}, {"key": "C", "text": "定期梳理，预防毛结"}, {"key": "D", "text": "避免频繁洗澡，破坏皮肤屏障"}, {"key": "E", "text": "发现皮肤病及时告知主人就医"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "9", "text": "宠物美容工具消毒的正确做法有（）**", "options": [{"key": "A", "text": "每只宠物使用后及时清洗消毒"}, {"key": "B", "text": "剪刀、梳子等用消毒液浸泡或擦拭"}, {"key": "C", "text": "定期全面消杀工具和美容台"}, {"key": "D", "text": "多人共用工具，无需消毒"}, {"key": "E", "text": "接触皮肤病宠物后，加强消毒"}], "answer": ["A", "B", "C", "E"], "raw_answer": "ABCE"}, {"type": "multi", "number": "10", "text": "宠物美容过程中，禁止的行为有（）**", "options": [{"key": "A", "text": "打骂、虐待宠物"}, {"key": "B", "text": "强行拉扯毛结、剪伤宠物"}, {"key": "C", "text": "使用人用洗护产品"}, {"key": "D", "text": "带病、受伤宠物强行美容"}, {"key": "E", "text": "泄露宠物主人隐私信息"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "11", "text": "适合宠物美容的健康宠物状态有（）**", "options": [{"key": "A", "text": "精神饱满，食欲正常"}, {"key": "B", "text": "无皮肤病、无伤口"}, {"key": "C", "text": "无感冒、呕吐、腹泻"}, {"key": "D", "text": "孕期、产后虚弱"}, {"key": "E", "text": "老年体弱，行动正常"}], "answer": ["A", "B", "C", "E"], "raw_answer": "ABCE"}, {"type": "multi", "number": "12", "text": "美容过程中可能导致宠物应激反应的因素包括（）**", "options": [{"key": "A", "text": "噪音过大"}, {"key": "B", "text": "温度过高"}, {"key": "C", "text": "陌生环境"}, {"key": "D", "text": "美容师动作粗暴"}, {"key": "E", "text": "轻柔抚摸"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "13", "text": "狗狗修剪哪些部位时需特别注意（）**", "options": [{"key": "A", "text": "耳朵内侧"}, {"key": "B", "text": "尾巴根部"}, {"key": "C", "text": "腹部"}, {"key": "D", "text": "腿部"}, {"key": "E", "text": "脚底"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "14", "text": "美容工具的消毒方法包括（）**", "options": [{"key": "A", "text": "高温煮沸"}, {"key": "B", "text": "化学消毒"}, {"key": "C", "text": "紫外线照射"}, {"key": "D", "text": "酒精擦拭"}, {"key": "E", "text": "清水冲洗"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "15", "text": "宠物皮肤常见问题包括（）**", "options": [{"key": "A", "text": "脱毛"}, {"key": "B", "text": "瘙痒"}, {"key": "C", "text": "湿疹"}, {"key": "D", "text": "脓包"}, {"key": "E", "text": "色素沉着"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "16", "text": "宠物毛发打结的原因可能有（）**", "options": [{"key": "A", "text": "长时间不梳理"}, {"key": "B", "text": "洗澡频率过高"}, {"key": "C", "text": "毛发过长"}, {"key": "D", "text": "缺乏营养"}, {"key": "E", "text": "定期修剪"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "17", "text": "给宠物洗澡的正确步骤包括（）**", "options": [{"key": "A", "text": "梳理毛发"}, {"key": "B", "text": "湿润毛发"}, {"key": "C", "text": "涂抹沐浴露"}, {"key": "D", "text": "彻底冲洗"}, {"key": "E", "text": "吹干毛发"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "18", "text": "宠物毛发打结容易导致（）**", "options": [{"key": "A", "text": "皮肤发红"}, {"key": "B", "text": "美容造型无法达成"}, {"key": "C", "text": "皮肤病的发生"}, {"key": "D", "text": "毛发更有光泽"}, {"key": "E", "text": "减少掉毛"}], "answer": ["A", "B", "C"], "raw_answer": "ABC"}, {"type": "multi", "number": "19", "text": "以下属于宠物美容师职业规范的是（）**", "options": [{"key": "A", "text": "尊重宠物习性，避免过度操作"}, {"key": "B", "text": "保持工具清洁消毒"}, {"key": "C", "text": "提高操作速度缩短时间"}, {"key": "D", "text": "喷洒宠物镇定喷雾"}, {"key": "E", "text": "主动学习宠物行为知识"}], "answer": ["A", "B", "E"], "raw_answer": "ABE"}, {"type": "multi", "number": "20", "text": "宠物美容师应具备的基本技能包括（）**", "options": [{"key": "A", "text": "熟练使用各类美容工具"}, {"key": "B", "text": "了解不同犬种的美容特点"}, {"key": "C", "text": "识别常见皮肤病"}, {"key": "D", "text": "处理宠物应激情况"}, {"key": "E", "text": "简单的宠物医疗操作"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "21", "text": "以下哪些犬种需要定期拔毛（）**", "options": [{"key": "A", "text": "雪纳瑞"}, {"key": "B", "text": "可卡"}, {"key": "C", "text": "贝灵顿梗"}, {"key": "D", "text": "西高地白梗"}, {"key": "E", "text": "金毛"}], "answer": ["A", "B", "D"], "raw_answer": "ABD"}, {"type": "multi", "number": "22", "text": "宠物犬的安定信号包括（）**", "options": [{"key": "A", "text": "打哈欠"}, {"key": "B", "text": "舔嘴唇"}, {"key": "C", "text": "转移视线"}, {"key": "D", "text": "尾巴夹紧"}, {"key": "E", "text": "快速奔跑"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "23", "text": "宠物专用香波应具备的特点有（）**", "options": [{"key": "A", "text": "pH值中性"}, {"key": "B", "text": "含天然成分"}, {"key": "C", "text": "无刺激性香精"}, {"key": "D", "text": "强力增白"}, {"key": "E", "text": "价格昂贵"}], "answer": ["A", "B", "C"], "raw_answer": "ABC"}, {"type": "multi", "number": "24", "text": "电剪刀头型号与留毛长度的对应关系，正确的有（）**", "options": [{"key": "A", "text": "30# ≈ 0.5mm"}, {"key": "B", "text": "15# ≈ 1.5mm"}, {"key": "C", "text": "10# ≈ 2.0mm"}, {"key": "D", "text": "7F ≈ 3.2mm"}, {"key": "E", "text": "4F ≈ 9mm"}], "answer": ["A", "B", "D"], "raw_answer": "ABD"}, {"type": "multi", "number": "25", "text": "美容剪刀的主要类型包括（）**", "options": [{"key": "A", "text": "直剪"}, {"key": "B", "text": "弯剪"}, {"key": "C", "text": "牙剪"}, {"key": "D", "text": "大直剪"}, {"key": "E", "text": "锯齿剪"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "26", "text": "宠物洗澡时的注意事项包括（）**", "options": [{"key": "A", "text": "控制水温在38-40℃"}, {"key": "B", "text": "使用宠物专用沐浴露"}, {"key": "C", "text": "避开眼睛和耳道"}, {"key": "D", "text": "彻底冲洗干净"}, {"key": "E", "text": "自然晾干"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "27", "text": "犬只常见的心理活动包括（）**", "options": [{"key": "A", "text": "占有心理"}, {"key": "B", "text": "等级心理"}, {"key": "C", "text": "嫉妒心理"}, {"key": "D", "text": "分离焦虑"}, {"key": "E", "text": "恐惧心理"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "28", "text": "宠物美容工具使用后的正确保养方法包括（）**", "options": [{"key": "A", "text": "清洗干净"}, {"key": "B", "text": "消毒处理"}, {"key": "C", "text": "涂抹润滑油"}, {"key": "D", "text": "妥善存放"}, {"key": "E", "text": "随意放置"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "29", "text": "下列属于卷毛长毛犬的有（）**", "options": [{"key": "A", "text": "贵宾犬"}, {"key": "B", "text": "比熊犬"}, {"key": "C", "text": "可卡犬"}, {"key": "D", "text": "博美犬"}, {"key": "E", "text": "马尔济斯犬"}], "answer": ["A", "B", "E"], "raw_answer": "ABE"}, {"type": "multi", "number": "30", "text": "宠物美容店接待新客户的流程包括（）**", "options": [{"key": "A", "text": "热情迎接客户"}, {"key": "B", "text": "询问宠物基本情况（品种、年龄等）"}, {"key": "C", "text": "介绍美容项目及价格"}, {"key": "D", "text": "了解客户需求并给出专业建议"}, {"key": "E", "text": "确定服务项目并记录信息"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "31", "text": "宠物犬的安定信号包括（）**", "options": [{"key": "A", "text": "打哈欠"}, {"key": "B", "text": "舔嘴唇"}, {"key": "C", "text": "转移视线"}, {"key": "D", "text": "尾巴夹紧"}, {"key": "E", "text": "快速奔跑"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "32", "text": "宠物专用香波应具备的特点有（）**", "options": [{"key": "A", "text": "pH值中性"}, {"key": "B", "text": "含天然成分"}, {"key": "C", "text": "无刺激性香精"}, {"key": "D", "text": "强力增白"}, {"key": "E", "text": "价格昂贵"}], "answer": ["A", "B", "C"], "raw_answer": "ABC"}, {"type": "multi", "number": "33", "text": "电剪刀头型号与留毛长度的对应关系，正确的有（）**", "options": [{"key": "A", "text": "30# ≈ 0.5mm"}, {"key": "B", "text": "15# ≈ 1.5mm"}, {"key": "C", "text": "10# ≈ 2.0mm"}, {"key": "D", "text": "7F ≈ 3.2mm"}, {"key": "E", "text": "4F ≈ 9mm"}], "answer": ["A", "B", "D"], "raw_answer": "ABD"}, {"type": "multi", "number": "34", "text": "美容剪刀的主要类型包括（）**", "options": [{"key": "A", "text": "直剪"}, {"key": "B", "text": "弯剪"}, {"key": "C", "text": "牙剪"}, {"key": "D", "text": "大直剪"}, {"key": "E", "text": "锯齿剪"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "multi", "number": "35", "text": "宠物洗澡时的注意事项包括（）**", "options": [{"key": "A", "text": "控制水温在38-40℃"}, {"key": "B", "text": "使用宠物专用沐浴露"}, {"key": "C", "text": "避开眼睛和耳道"}, {"key": "D", "text": "彻底冲洗干净"}, {"key": "E", "text": "自然晾干"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "36", "text": "犬只常见的心理活动包括（）**", "options": [{"key": "A", "text": "占有心理"}, {"key": "B", "text": "等级心理"}, {"key": "C", "text": "嫉妒心理"}, {"key": "D", "text": "分离焦虑"}, {"key": "E", "text": "恐惧心理"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "37", "text": "宠物美容工具使用后的正确保养方法包括（）**", "options": [{"key": "A", "text": "清洗干净"}, {"key": "B", "text": "消毒处理"}, {"key": "C", "text": "涂抹润滑油"}, {"key": "D", "text": "妥善存放"}, {"key": "E", "text": "随意放置"}], "answer": ["A", "B", "C", "D"], "raw_answer": "ABCD"}, {"type": "multi", "number": "38", "text": "下列属于卷毛长毛犬的有（）**", "options": [{"key": "A", "text": "贵宾犬"}, {"key": "B", "text": "比熊犬"}, {"key": "C", "text": "可卡犬"}, {"key": "D", "text": "博美犬"}, {"key": "E", "text": "马尔济斯犬"}], "answer": ["A", "B", "E"], "raw_answer": "ABE"}, {"type": "multi", "number": "39", "text": "宠物美容店接待新客户的流程包括（）**", "options": [{"key": "A", "text": "热情迎接客户"}, {"key": "B", "text": "询问宠物基本情况（品种、年龄等）"}, {"key": "C", "text": "介绍美容项目及价格"}, {"key": "D", "text": "了解客户需求并给出专业建议"}, {"key": "E", "text": "确定服务项目并记录信息"}], "answer": ["A", "B", "C", "D", "E"], "raw_answer": "ABCDE"}, {"type": "tf", "number": "1", "text": "宠物美容只需要把宠物打扮好看，健康护理不重要", "answer": "false"}, {"type": "tf", "number": "2", "text": "宠物洗澡可以用人用洗发水、沐浴露，省钱又方便", "answer": "false"}, {"type": "tf", "number": "3", "text": "给宠物剪指甲时，只要剪短就行，不用管血线", "answer": "false"}, {"type": "tf", "number": "4", "text": "宠物毛发洗完澡后，自然晾干就可以，不用吹干", "answer": "false"}, {"type": "tf", "number": "5", "text": "卷毛犬（泰迪、比熊）需要定期梳理毛发，预防打结", "answer": "true"}, {"type": "tf", "number": "6", "text": "猫咪美容和狗狗美容流程完全一样，不用区别对待", "answer": "false"}, {"type": "tf", "number": "7", "text": "宠物肛门腺需要定期清理，长期不清理易发炎", "answer": "true"}, {"type": "tf", "number": "8", "text": "美容工具使用后，不用消毒，下一只宠物直接用", "answer": "false"}, {"type": "tf", "number": "9", "text": "发现宠物有皮肤病、伤口，应立即停止美容，告知主人就医", "answer": "true"}, {"type": "tf", "number": "10", "text": "给宠物洗澡水温越高越好，能杀细菌", "answer": "false"}, {"type": "tf", "number": "11", "text": "脚底毛修剪是基础护理，可防止宠物打滑、藏污纳垢", "answer": "true"}, {"type": "tf", "number": "12", "text": "宠物美容时，可大声呵斥不听话的宠物，让其配合", "answer": "false"}, {"type": "tf", "number": "13", "text": "短毛犬不掉毛，不用梳理毛发，也不用去浮毛", "answer": "false"}, {"type": "tf", "number": "14", "text": "宠物护毛素可柔顺毛发、减少打结，洗完澡可适量使用", "answer": "true"}, {"type": "tf", "number": "15", "text": "宠物美容过程中，剪毛前必须进行彻底的皮肤检查，以避免损伤敏感部位", "answer": "true"}, {"type": "tf", "number": "16", "text": "狗狗的耳道结构复杂，清洁时应使用滴耳液直接灌入耳道内进行冲洗", "answer": "false"}, {"type": "tf", "number": "17", "text": "宠物在高温环境下进行美容操作时，应确保室内通风良好，并定时提供饮水", "answer": "true"}, {"type": "tf", "number": "18", "text": "猫咪的爪子修剪应保留最后一节指骨，以避免影响抓握能力", "answer": "false"}, {"type": "tf", "number": "19", "text": "宠物美容师在操作前需确认宠物是否对特定工具（如电推剪）过敏或产生恐惧反应", "answer": "true"}, {"type": "tf", "number": "20", "text": "美容过程中使用的消毒剂应选择对宠物皮肤刺激性小的产品，并确保彻底挥发", "answer": "true"}, {"type": "tf", "number": "21", "text": "狗狗的臀部区域修剪时，应避免过度修剪导致皮肤裸露，引发皮肤病", "answer": "true"}, {"type": "tf", "number": "22", "text": "宠物美容师在处理长毛犬种时，应优先使用梳子梳理，避免直接剪毛造成打结", "answer": "true"}, {"type": "tf", "number": "23", "text": "美容完成后，宠物主提出的合理需求（如特定造型）应在安全范围内尽量满足", "answer": "true"}, {"type": "tf", "number": "24", "text": "所有犬种都适合剃光毛发", "answer": "false"}, {"type": "tf", "number": "25", "text": "宠物的毛发越长，越不需要梳理", "answer": "false"}, {"type": "tf", "number": "26", "text": "犬只的世界只有黑白灰三种颜色", "answer": "true"}, {"type": "tf", "number": "27", "text": "皮肤和粘膜屏障功能包括机械阻挡、分泌抑菌杀菌物质", "answer": "true"}, {"type": "tf", "number": "28", "text": "贵宾犬脚部修剪需要精细操作，通常使用10#电剪刀头", "answer": "true"}, {"type": "tf", "number": "29", "text": "美国可卡的头花修剪适合使用牙剪", "answer": "true"}, {"type": "tf", "number": "30", "text": "给幼犬洗澡时，莲蓬头从空中直喷是不适当的做法", "answer": "true"}, {"type": "tf", "number": "31", "text": "造型修剪时静刃在前，动刃在后才能将毛发修剪整齐", "answer": "false"}, {"type": "tf", "number": "32", "text": "在剃除松弛部位的毛发时要顺着皮肤的皱褶处进行剃除", "answer": "false"}, {"type": "tf", "number": "33", "text": "在美容造型修剪过程中用到最多的是最后一根肋骨", "answer": "true"}, {"type": "tf", "number": "34", "text": "浴液在稀释的过程中应该先放浴液后加水挤出多余泡沫后使用", "answer": "false"}, {"type": "tf", "number": "35", "text": "英国养犬俱乐部的简称是KC", "answer": "true"}, {"type": "tf", "number": "36", "text": "英国可卡比美国可卡的体型小", "answer": "false"}, {"type": "tf", "number": "37", "text": "雪纳瑞属于刚毛犬种为保持毛质特性更适合采用拔毛的美容方式进行", "answer": "true"}, {"type": "tf", "number": "38", "text": "雪纳瑞的身体呈正方形，身长与身高的比例为1:1", "answer": "true"}, {"type": "tf", "number": "39", "text": "雪纳瑞的背线水平或前高后低略倾向下的斜线", "answer": "true"}, {"type": "tf", "number": "40", "text": "雪纳瑞按照体型分为迷你雪纳瑞、标准雪纳瑞和巨型雪纳瑞三种", "answer": "true"}, {"type": "tf", "number": "41", "text": "消毒粉消毒液不可以选择刺激性很强的产品，也尽量不使用在犬只身上", "answer": "true"}, {"type": "tf", "number": "42", "text": "西施犬拥有长而柔顺的被毛，应使用木柄梳进行梳理", "answer": "true"}, {"type": "tf", "number": "43", "text": "西施犬夏装头部应修剪成菊花嘴", "answer": "true"}, {"type": "tf", "number": "44", "text": "西施犬尾位高紧贴背部，尾尖笔直不弯曲，静态时搭在身体一侧", "answer": "true"}, {"type": "tf", "number": "45", "text": "西施犬的尾巴应修剪成扇形", "answer": "false"}, {"type": "tf", "number": "46", "text": "为了将毛发剃除干净需要使用电剪反复多次的进行剃除", "answer": "false"}, {"type": "tf", "number": "47", "text": "为避免洗澡时耳朵进水要用棉花将耳孔堵住", "answer": "true"}, {"type": "tf", "number": "48", "text": "万能梗属于梗类犬里体型中等的犬种", "answer": "false"}, {"type": "tf", "number": "49", "text": "通过观察犬只牙齿的磨损程度可以判断年龄", "answer": "true"}, {"type": "tf", "number": "50", "text": "剃贵宾脚时应由脚尖逆毛剃至腕骨水平线", "answer": "true"}, {"type": "tf", "number": "51", "text": "剃腹底毛时母犬要剃成U字型", "answer": "false"}, {"type": "tf", "number": "52", "text": "剃腹底毛时公犬要剃成V字型", "answer": "false"}, {"type": "tf", "number": "53", "text": "剃除脚底毛是防止打滑并且更容易散发热量", "answer": "true"}, {"type": "tf", "number": "54", "text": "体长是胸骨到坐骨端的水平线", "answer": "true"}, {"type": "tf", "number": "55", "text": "松狮犬是中国特有的犬种因其黑色的舌头而引人注目", "answer": "false"}, {"type": "tf", "number": "56", "text": "梳理毛发可以避免犬只毛发缠结并且促进血液循环", "answer": "true"}, {"type": "tf", "number": "57", "text": "世界畜犬联盟的简称是FCI", "answer": "true"}, {"type": "tf", "number": "58", "text": "使用针梳或柄梳进行毛发梳理时需要使用手臂的力量", "answer": "false"}, {"type": "tf", "number": "59", "text": "身高是肩胛骨最高点到地面的垂直距离", "answer": "true"}, {"type": "tf", "number": "60", "text": "日本养犬俱乐部的简称是KKC", "answer": "false"}, {"type": "tf", "number": "61", "text": "犬种标准中贵宾犬颜色的描述上只能是单一颜色", "answer": "true"}, {"type": "tf", "number": "62", "text": "犬只指甲过长不进行修剪会导致脚掌变形", "answer": "true"}, {"type": "tf", "number": "63", "text": "犬只幼年时有28颗牙齿，成年后的恒齿共30颗", "answer": "false"}, {"type": "tf", "number": "64", "text": "犬只是由狼演变而来的洞穴型动物，过群居生活", "answer": "true"}, {"type": "tf", "number": "65", "text": "犬只美容的目的是为了掩盖缺陷发挥优点", "answer": "true"}, {"type": "tf", "number": "66", "text": "犬只腹部、生殖器部位要使用最短留毛长度的刀头反复多次剃除干净", "answer": "false"}, {"type": "tf", "number": "67", "text": "犬只耳道是U型的结构", "answer": "false"}, {"type": "tf", "number": "68", "text": "犬只的正常体温是37.8-38.5度", "answer": "true"}, {"type": "tf", "number": "69", "text": "犬只的嗅觉发达可以辨别出200万种不同的气味", "answer": "true"}, {"type": "tf", "number": "70", "text": "犬只的听觉是人类的16倍，感应力可以达到12万赫兹", "answer": "true"}, {"type": "tf", "number": "71", "text": "犬只的水平咬合是上下牙峰在一条水平线上直接接触，咬合力很强", "answer": "true"}, {"type": "tf", "number": "72", "text": "犬只的世界只有黑白灰三种，通过颜色呈现的深浅度进行辨识", "answer": "true"}, {"type": "tf", "number": "73", "text": "犬只的肋骨总数为13对", "answer": "true"}, {"type": "tf", "number": "74", "text": "犬只不能使用人的浴液是因为人的浴液偏酸性，犬的浴液偏碱性", "answer": "false"}, {"type": "tf", "number": "75", "text": "犬只99%的基因是相似的，剩下的1%决定了品种", "answer": "true"}, {"type": "tf", "number": "76", "text": "秋田犬是英国的国犬", "answer": "false"}, {"type": "tf", "number": "77", "text": "迷你雪纳瑞按照颜色分为三种：椒盐色、白色、黑色", "answer": "false"}, {"type": "tf", "number": "78", "text": "美国养犬俱乐部简称是AKC", "answer": "true"}, {"type": "tf", "number": "79", "text": "美国可卡美容时耳部剃一半至2/3", "answer": "false"}, {"type": "tf", "number": "80", "text": "美国可卡的头部圆拱形额段90度，英国可卡的头部则较为平坦", "answer": "true"}, {"type": "tf", "number": "81", "text": "美国可卡的饰毛略少外层毛发呈波浪状，英国可卡的饰毛丰厚长而垂顺", "answer": "false"}, {"type": "tf", "number": "82", "text": "美国可卡的面部需用尽量短的电剪刀头逆毛剃光", "answer": "false"}, {"type": "tf", "number": "83", "text": "灵缇的产地是意大利", "answer": "true"}, {"type": "tf", "number": "84", "text": "练习剪刀的过程中开合要小，速度要快", "answer": "false"}, {"type": "tf", "number": "85", "text": "腊肠犬产地德国", "answer": "true"}, {"type": "tf", "number": "86", "text": "金毛寻回犬的产地是美国", "answer": "true"}, {"type": "tf", "number": "87", "text": "接近一只陌生犬时要迅速接近抱起不给犬只思考的机会", "answer": "false"}, {"type": "tf", "number": "88", "text": "健康犬只在任何时候洗澡都是没有问题的", "answer": "false"}, {"type": "tf", "number": "89", "text": "健康犬只的牙龈应该呈现出红色", "answer": "false"}, {"type": "tf", "number": "90", "text": "健康犬只的鼻子应该是温热的", "answer": "false"}, {"type": "tf", "number": "91", "text": "剪刀上bk70-6540标注的70为剪刀的尺寸", "answer": "false"}, {"type": "tf", "number": "92", "text": "护毛素稀释时要使用高水温并且反复晃匀后使用", "answer": "false"}, {"type": "tf", "number": "93", "text": "烘干箱需要先预热一段时间然后再正常使用", "answer": "true"}, {"type": "tf", "number": "94", "text": "韩国养犬俱乐部的简称是JKC", "answer": "false"}, {"type": "tf", "number": "95", "text": "贵宾犬美容时两内眼角之间不超过上眼皮的位置剃成V字", "answer": "false"}, {"type": "tf", "number": "96", "text": "贵宾犬口吻部的描述中：鼻镜到额段的长度等于额段到枕骨的距离", "answer": "true"}, {"type": "tf", "number": "97", "text": "贵宾犬的眼睛是圆形为黑色或者深棕色有眼线", "answer": "false"}, {"type": "tf", "number": "98", "text": "贵宾犬的尾巴由尾根向上2厘米左右剃成V字", "answer": "false"}, {"type": "tf", "number": "99", "text": "贵宾犬的耳位位于外眼角的水平延长线", "answer": "true"}, {"type": "tf", "number": "100", "text": "贵宾犬按照体型分为玩具型、迷你型、标准型和巨型四种", "answer": "false"}, {"type": "tf", "number": "101", "text": "公犬生殖器需要留毛进行导尿", "answer": "true"}, {"type": "tf", "number": "102", "text": "给犬只梳理毛发按照后肢、臀部、躯干、前肢、头尾的顺序进行", "answer": "true"}, {"type": "tf", "number": "103", "text": "给犬只拔除耳毛时要少量多次的进行", "answer": "true"}, {"type": "tf", "number": "104", "text": "腹底毛剃除时需要使用留毛长度最短的刀头", "answer": "false"}, {"type": "tf", "number": "105", "text": "俯首是犬只重要的表达方式代表了一种邀约行为", "answer": "true"}, {"type": "tf", "number": "106", "text": "耳螨是犬只最常见的耳部疾病", "answer": "true"}, {"type": "tf", "number": "107", "text": "电剪在使用过程中应平行于皮肤，迅速剃过", "answer": "false"}, {"type": "tf", "number": "108", "text": "电剪及刀头正常使用轻微摔伤也没有问题", "answer": "false"}, {"type": "tf", "number": "109", "text": "电剪刀头在首次使用时需要先去除防锈层", "answer": "true"}, {"type": "tf", "number": "110", "text": "电剪刀头可以用于剃除各种部位", "answer": "true"}, {"type": "tf", "number": "111", "text": "所有犬种的洗澡频率均为每月1次", "answer": "false"}, {"type": "tf", "number": "112", "text": "修剪贵宾犬\"运动装\"时，尾部需保留1/3毛发形成毛球", "answer": "false"}, {"type": "tf", "number": "113", "text": "猫的被毛梳理应逆毛方向进行，以彻底去除底绒", "answer": "false"}, {"type": "tf", "number": "114", "text": "电剪使用后需清理刀头", "answer": "true"}, {"type": "tf", "number": "115", "text": "给幼犬首次美容应选择上午，避免空腹或刚进食后操作", "answer": "true"}, {"type": "tf", "number": "116", "text": "猫的被毛分为针毛、芒毛和绒毛三层，其中绒毛是保温的主要部分", "answer": "false"}, {"type": "tf", "number": "117", "text": "美容工具使用后，可用75%酒精擦拭刀头消毒，无需拆卸", "answer": "false"}, {"type": "tf", "number": "118", "text": "比熊犬的\"圆头\"修剪需保留眉毛，使眼部轮廓更突出", "answer": "true"}], "groups": [{"index": 0, "count": 20}, {"index": 1, "count": 20}, {"index": 2, "count": 20}, {"index": 3, "count": 20}, {"index": 4, "count": 20}, {"index": 5, "count": 20}, {"index": 6, "count": 20}, {"index": 7, "count": 20}, {"index": 8, "count": 20}, {"index": 9, "count": 20}, {"index": 10, "count": 20}, {"index": 11, "count": 20}, {"index": 12, "count": 20}, {"index": 13, "count": 20}, {"index": 14, "count": 20}, {"index": 15, "count": 20}, {"index": 16, "count": 20}, {"index": 17, "count": 20}, {"index": 18, "count": 5}], "stats": {"single": 208, "multi": 39, "tf": 118, "total": 365, "groupCount": 19}};
+    allQuestions = raw.questions;
+    render();
+  } catch(err) {
+    document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;"><div style="font-size:48px;margin-bottom:12px;">⚠️</div><div>题库加载失败</div></div>';
+  }
+})();
+</script>
+</body>
+</html>
